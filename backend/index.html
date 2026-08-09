@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onecrew Cockpit - Dynamic Agentic Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body>
+  <!-- Ambient floating glows -->
+  <div class="bg-glow bg-glow-purple"></div>
+  <div class="bg-glow bg-glow-white"></div>
+  
+  <div class="dashboard-wrapper">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>ONECREW COCKPIT</h1>
+          <p>Multi-agent coordination system</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="status-badge status-healthy">
+          <span class="pulse-dot"></span>
+          SYS_ONLINE: healthy
+        </div>
+        <div class="status-badge status-token">
+          <svg class="key-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3M15.5 7.5L14 9M18.5 4.5L17 6"/>
+          </svg>
+          TOKEN_FOUND
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="dashboard-content" id="dashboardWorkspace">
+      
+      <!-- ==================== DASHBOARD MODULE CARDS ==================== -->
+      
+      <!-- 1. AI Agent Hub (Default Main Card) -->
+      <div class="card pos-main" id="card-agent-hub">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">AGENT HUB</span>
+              <h3>Coordination</h3>
+            </div>
+            <div class="preview-indicator pulsing-cyan"></div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Context Agent: Active</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Agent Hub Dashboard</h2>
+              <p>Communicate with and orchestrate startup AI agents in real-time.</p>
+            </div>
+            <div class="agent-selectors">
+              <button class="agent-tab active" data-agent="context">
+                <span class="avatar tab-av">C</span>
+                Context Agent
+              </button>
+              <button class="agent-tab" data-agent="strategy">
+                <span class="avatar tab-av">S</span>
+                Strategy Agent
+              </button>
+              <button class="agent-tab" data-agent="architecture">
+                <span class="avatar tab-av">A</span>
+                Architecture Agent
+              </button>
+            </div>
+          </div>
+          <div class="main-body chat-container">
+            <div class="chat-messages" id="chatMessages">
+              <div class="message system">
+                <div class="message-meta">SYSTEM UPDATE</div>
+                <div class="message-text">Multi-Agent framework initialized. Context, Strategy, and Architecture nodes online.</div>
+              </div>
+              <div class="message agent" data-agent="context">
+                <div class="message-header">
+                  <span class="avatar chat-av">C</span>
+                  <span class="agent-name">Context Agent</span>
+                  <span class="message-time">17:10</span>
+                </div>
+                <div class="message-text">Hello! I've loaded the startup profile directory. Ready to analyze context or structural payload metrics.</div>
+              </div>
+            </div>
+            <div class="chat-input-wrapper">
+              <div class="quick-prompts">
+                <button class="prompt-chip" data-prompt="/analyze context">/analyze context</button>
+                <button class="prompt-chip" data-prompt="/build architecture">/build architecture</button>
+                <button class="prompt-chip" data-prompt="/optimize load">/optimize load</button>
+              </div>
+              <form class="chat-form" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Send system instructions or query agents..." autocomplete="off">
+                <button type="submit" class="send-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Workspace Payload (Dashboard Module) -->
+      <div class="card pos-side-1" id="card-workspace-payload">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">GET // PAYLOAD</span>
+              <h3>Workspace Payload</h3>
+            </div>
+            <div class="method-badge get-badge">GET</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-code">
+              <code>{ "status": "success", "id": "demo" }</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <div class="endpoint-line">
+                <span class="method-badge get-badge">GET</span>
+                <span class="endpoint-url">/api/dashboard/workspace/payload</span>
+              </div>
+              <h2>Full Workspace Structural Payload</h2>
+            </div>
+            <button class="action-btn" id="btnExecuteStream">Execute Stream</button>
+          </div>
+          <div class="main-body terminal-container">
+            <div class="terminal-header">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
+              <span class="term-title">payload_stream.json</span>
+            </div>
+            <pre class="terminal-body" id="payloadTerminal"><code>{
+  "success": true,
+  "data": {
+    "id": "demo_profile",
+    "createdAt": "2026-07-11T17:10:00Z",
+    "status": "ready",
+    "discoveryMeta": {
+      "totalSteps": 8,
+      "completedSteps": 8,
+      "confidenceScores": {
+        "problemUnderstanding": 0.95,
+        "targetAudience": 0.9,
+        "productCategory": 0.92
+      }
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. System Status Metrics (Dashboard Module) -->
+      <div class="card pos-side-2" id="card-system-metrics">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-green">LIVE // METRICS</span>
+              <h3>System Overview</h3>
+            </div>
+            <div class="preview-metric-text" id="miniLatencyText">28ms</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-sparkline">
+              <canvas id="miniSparklineCanvas" width="240" height="40"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>System Status & Real-time Metrics</h2>
+              <p>Live health and operation indicators of running neural agent clusters.</p>
+            </div>
+          </div>
+          <div class="main-body metrics-dashboard">
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">NETWORK LATENCY</span>
+                <span class="metric-value" id="latencyVal">28ms</span>
+                <span class="metric-trend text-green">Stable</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">MEMORY LOAD</span>
+                <span class="metric-value" id="memVal">43%</span>
+                <span class="metric-trend text-purple">14.2 / 32 GB</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">AGENT LOAD</span>
+                <span class="metric-value">0.82 TF</span>
+                <span class="metric-trend text-blue">9 cores active</span>
+              </div>
+            </div>
+            <div class="chart-container-large">
+              <div class="chart-header">
+                <h3>Agent Network Core Metrics (Live)</h3>
+                <span class="chart-legend">
+                  <span class="legend-color-dot purple"></span> Latency
+                  <span class="legend-color-dot green"></span> Memory
+                </span>
+              </div>
+              <canvas id="liveMetricsChart" width="800" height="280"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Business Vision (Dashboard Module) -->
+      <div class="card pos-side-3" id="card-business-vision">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">VAL // BIZ</span>
+              <h3>Business Vision</h3>
+            </div>
+            <div class="preview-metric-text">$4.2B TAM</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">SOM target: $42M</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Business Vision Projections</h2>
+              <p>Startup market projections, vector metrics, and core vision targets.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="biz-metrics-row">
+              <div class="biz-card">
+                <h4>TAM (Total Addressable Market)</h4>
+                <div class="biz-val">$4.2B</div>
+                <div class="biz-sub">Target sector growth CAGR 12.8%</div>
+              </div>
+              <div class="biz-card">
+                <h4>SAM (Service Addressable Market)</h4>
+                <div class="biz-val">$840M</div>
+                <div class="biz-sub">Primary geographic sector launch</div>
+              </div>
+              <div class="biz-card">
+                <h4>SOM (Service Obtainable Market)</h4>
+                <div class="biz-val">$42M</div>
+                <div class="biz-sub">3-Year market capture target</div>
+              </div>
+            </div>
+            <div class="biz-table-wrapper">
+              <h3>Venture Milestone Allocations</h3>
+              <table class="biz-table">
+                <thead>
+                  <tr>
+                    <th>Milestone</th>
+                    <th>Target Date</th>
+                    <th>Required Funding</th>
+                    <th>Confidence Score</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Phase 1: Seed Validation</td>
+                    <td>Q3 2026</td>
+                    <td>$250k</td>
+                    <td>94%</td>
+                    <td><span class="tbl-badge green">COMPLETED</span></td>
+                  </tr>
+                  <tr>
+                    <td>Phase 2: MVP Stream Launch</td>
+                    <td>Q1 2027</td>
+                    <td>$800k</td>
+                    <td>88%</td>
+                    <td><span class="tbl-badge amber">IN_PROGRESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>Phase 3: Core Growth Scale</td>
+                    <td>Q4 2027</td>
+                    <td>$2.5M</td>
+                    <td>75%</td>
+                    <td><span class="tbl-badge gray">QUEUED</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Core Spec Matrix (Dashboard Module) -->
+      <div class="card pos-side-4" id="card-core-specs">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">SPEC // DOCS</span>
+              <h3>Core Spec Matrix</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">STABLE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Frontend signals documented.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Core Product Specification Matrix</h2>
+              <p>Static technical features cataloged by agent nodes.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// COMPONENT 01: FRONTEND ROUTER</h3>
+                <div class="spec-detail-line"><strong>Routing Mode:</strong> Client-side Virtual DOM</div>
+                <div class="spec-detail-line"><strong>State Manager:</strong> Translucent Signal Bus</div>
+                <div class="spec-detail-line"><strong>Style Standard:</strong> Grid-centric CSS3 Variables</div>
+                <div class="spec-detail-line"><strong>Latency Target:</strong> &lt; 50ms (Core Swaps)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// COMPONENT 02: ORCHESTRATION PIPELINE</h3>
+                <div class="spec-detail-line"><strong>Framework:</strong> NeuralAgent Cluster V2</div>
+                <div class="spec-detail-line"><strong>Communication Protocol:</strong> REST Streaming JSON</div>
+                <div class="spec-detail-line"><strong>Sync Gate:</strong> Latency Oscillator</div>
+                <div class="spec-detail-line"><strong>Confidence threshold:</strong> 85% required for auto-merge</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// COMPONENT 03: TELEMETRY ENGINE</h3>
+                <div class="spec-detail-line"><strong>Engine:</strong> HTML5 2D Canvas Context</div>
+                <div class="spec-detail-line"><strong>Poller Rate:</strong> 10Hz</div>
+                <div class="spec-detail-line"><strong>Data Buffer:</strong> 30 historical array keys</div>
+                <div class="spec-detail-line"><strong>Visualizer Filter:</strong> Cubic Bezier Oscillators</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Workspace Core Modules Card -->
+      <div class="card pos-hidden" id="card-core-modules">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">WORKSPACE // MODS</span>
+              <h3>Core Modules</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">8 MODULES</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Operational domains ready.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Workspace Core Modules</h2>
+              <p>Select an operational domain to inspect and manage workspace specs.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+              
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('foundation')" style="cursor: pointer;">
+                <h3>🏗️ Foundation</h3>
+                <div class="spec-detail-line">Core principles, vision, and operational ground rules.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('business')" style="cursor: pointer;">
+                <h3>💼 Business</h3>
+                <div class="spec-detail-line">Business models, monetization, and financial forecasts.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('product')" style="cursor: pointer;">
+                <h3>📦 Product</h3>
+                <div class="spec-detail-line">Roadmaps, core feature specs, and engineering backlog.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('brand')" style="cursor: pointer;">
+                <h3>🎨 Brand</h3>
+                <div class="spec-detail-line">Visual identity, tone of voice, and brand guidelines.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('marketing')" style="cursor: pointer;">
+                <h3>📢 Marketing</h3>
+                <div class="spec-detail-line">Growth strategies, acquisition channels, and content pipelines.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('sales')" style="cursor: pointer;">
+                <h3>🎯 Sales</h3>
+                <div class="spec-detail-line">Sales funnels, CRM pipelines, and conversion tactics.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('execution')" style="cursor: pointer;">
+                <h3>⚡ Execution</h3>
+                <div class="spec-detail-line">Action plans, sprint goals, and active agent workflows.</div>
+              </div>
+
+              <div class="spec-section-card clickable-module-card" onclick="selectWorkspaceModule('resources')" style="cursor: pointer;">
+                <h3>🛠️ Resources</h3>
+                <div class="spec-detail-line">Documentation, external APIs, and infrastructure assets.</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DISCOVERY MODULE CARDS ==================== -->
+
+      <!-- 7. Context Analyzer (Discovery Module) -->
+      <div class="card pos-hidden" id="card-context-analyzer">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 01</span>
+              <h3>Context Analyzer</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">DONE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Seed metrics ingested.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 1: Startup Context Analyzer</h2>
+              <p>Baseline parameters configuration logged during initialization.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// INGESTION PARAMETERS</h3>
+                <div class="spec-detail-line"><strong>Sector:</strong> DevTool SaaS Orchestrator</div>
+                <div class="spec-detail-line"><strong>Seed Focus:</strong> Multi-Agent Terminal Client</div>
+                <div class="spec-detail-line"><strong>Access Tokens:</strong> Active master keys registered</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// DEMOGRAPHICS SCAN</h3>
+                <div class="spec-detail-line"><strong>Primary Target:</strong> Developer teams & Architects</div>
+                <div class="spec-detail-line"><strong>Painpoint Focus:</strong> Deployment friction & logs latency</div>
+                <div class="spec-detail-line"><strong>Valuation Baseline:</strong> Pre-seed market metrics matched</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Competitive Edge (Discovery Module) -->
+      <div class="card pos-hidden" id="card-competitive-edge">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 02</span>
+              <h3>Competitive Edge</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">DONE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Competitive vectors mapped.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 2: Competitive Advantage Edge</h2>
+              <p>Dynamic sector databases query analysis output.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// SECTOR VECTORS</h3>
+                <div class="spec-detail-line"><strong>Direct Competitors:</strong> 4 matched (DevAgent local platforms)</div>
+                <div class="spec-detail-line"><strong>Advantage Node:</strong> Dynamic window coordination matrix</div>
+                <div class="spec-detail-line"><strong>Pricing Strategy:</strong> Token-metered API scaling</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// MATRIX SCORES</h3>
+                <div class="spec-detail-line"><strong>Feature Advantage:</strong> 9.2 / 10</div>
+                <div class="spec-detail-line"><strong>Speed Index:</strong> 8.8 / 10</div>
+                <div class="spec-detail-line"><strong>Market Fit Index:</strong> 9.1 / 10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. MVP Strategy (Discovery Module) -->
+      <div class="card pos-hidden" id="card-mvp-strategy">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 03</span>
+              <h3>MVP Strategy</h3>
+            </div>
+            <span class="tbl-badge amber" style="font-size: 0.55rem; padding: 2px 5px;">ACTIVE</span>
+          </div>
+          <div class="preview-body">
+            <div class="mini-progress-bar"><div class="progress-fill" style="width: 75%;"></div></div>
+            <div class="mini-progress-label">Step 3 of 4: Spec Outline</div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 3: MVP Strategy Planning</h2>
+              <p>Product specifications, launch timeline, and building tasks list.</p>
+            </div>
+          </div>
+          <div class="main-body steps-container">
+            <div class="steps-grid">
+              <div class="step-card completed">
+                <div class="step-icon-status">
+                  <span class="step-num">1</span>
+                  <span class="step-status">Complete</span>
+                </div>
+                <h3>Context Analyzer</h3>
+                <p>Ingests baseline vision descriptors.</p>
+              </div>
+              <div class="step-card completed">
+                <div class="step-icon-status">
+                  <span class="step-num">2</span>
+                  <span class="step-status">Complete</span>
+                </div>
+                <h3>Competitive Edge</h3>
+                <p>Maps feature set price tiers.</p>
+              </div>
+              <div class="step-card active">
+                <div class="step-icon-status">
+                  <span class="step-num">3</span>
+                  <span class="step-status">Active</span>
+                </div>
+                <h3>MVP Spec Setup</h3>
+                <p>Building coordinates swap script and CSS styling.</p>
+              </div>
+              <div class="step-card disabled">
+                <div class="step-icon-status">
+                  <span class="step-num">4</span>
+                  <span class="step-status">Queued</span>
+                </div>
+                <h3>Sync Build</h3>
+                <p>Generate final server build files.</p>
+              </div>
+            </div>
+            <div class="steps-action-bar">
+              <div class="input-inline">
+                <input type="text" placeholder="session token text" value="session_token_58832a8..." disabled>
+                <button class="action-btn">Initialize Sync Build</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Sync Build (Discovery Module) -->
+      <div class="card pos-hidden" id="card-sync-build">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 04</span>
+              <h3>Sync Build</h3>
+            </div>
+            <span class="tbl-badge gray" style="font-size: 0.55rem; padding: 2px 5px;">QUEUED</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Target bundle configurations ready.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <div class="endpoint-line">
+                <span class="method-badge post-badge">POST</span>
+                <span class="endpoint-url">/api/discovery/build</span>
+              </div>
+              <h2>Sync Build Matrix Compilation</h2>
+            </div>
+            <button class="action-btn">Compile Target</button>
+          </div>
+          <div class="main-body terminal-container">
+            <div class="terminal-header">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
+              <span class="term-title">build_compiler.log</span>
+            </div>
+            <pre class="terminal-body"><code>// Target Node initialized. Waiting for trigger...
+[LOG_ENTRY] Compiler check: 0 errors, 0 warnings.
+[READY] Bundle size estimates:
+ - bundle.main.js: 142KB
+ - bundle.styles.css: 22KB
+ - assets/fonts/jetbrains-mono: Loaded.</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SECURITY MODULE CARDS ==================== -->
+
+      <!-- 11. Access Controls (Security Module) -->
+      <div class="card pos-hidden" id="card-access-control">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // LOCK</span>
+              <h3>Access Control</h3>
+            </div>
+            <div class="preview-metric-text text-green">SECURE</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">2 active agent tunnels</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Gateway Access Monitors</h2>
+              <p>Auditing neural agent connections and channel encryption bounds.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// ENCRYPTION SUMMARY</h3>
+                <div class="spec-detail-line"><strong>Cypher:</strong> AES-GCM-256</div>
+                <div class="spec-detail-line"><strong>Rotation Period:</strong> 12 Hours (Auto)</div>
+                <div class="spec-detail-line"><strong>Route:</strong> TLS 1.3 Tunnel Socket</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// ACTIVE CONNECTIONS</h3>
+                <div class="spec-detail-line"><strong>Context-Node-A:</strong> Connected (127.0.0.1)</div>
+                <div class="spec-detail-line"><strong>Strategy-Node-C:</strong> Connected (127.0.0.1)</div>
+                <div class="spec-detail-line"><strong>Arch-Node-Alpha:</strong> Pending registration token</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. Token Registry (Security Module) -->
+      <div class="card pos-hidden" id="card-token-registry">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // REG</span>
+              <h3>Token Registry</h3>
+            </div>
+            <div class="preview-metric-text" id="miniTokenText">2 Keys</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-code"><code>token_master_2026...</code></div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Security Token Registry Form</h2>
+              <p>Register new authentication endpoints into the neural gateway.</p>
+            </div>
+          </div>
+          <div class="main-body security-container" style="overflow: hidden;">
+            <div class="sec-form-card" style="border: none; padding: 0;">
+              <div class="sec-form">
+                <label for="secRole">Agent Access Role</label>
+                <select id="secRole">
+                  <option value="master">MASTER_ACCESS</option>
+                  <option value="readonly">READ_ONLY_VISOR</option>
+                  <option value="developer">DEVELOPER_NODE</option>
+                </select>
+                <label for="secKey">Seed Phrase Prefix</label>
+                <input type="text" id="secKey" value="onecrew_seed_cluster_" placeholder="seed string...">
+                <button class="action-btn" id="btnGenKey">Generate Key Registry</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. Session Monitor (Security Module) -->
+      <div class="card pos-hidden" id="card-session-monitor">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // AUDIT</span>
+              <h3>Session Monitor</h3>
+            </div>
+            <span class="pulse-dot"></span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Uptime: 100% stable</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Session Audit Log</h2>
+              <p>Active registry logs in current console session.</p>
+            </div>
+          </div>
+          <div class="main-body security-container">
+            <div class="sec-list-card" style="border: none; padding: 0;">
+              <ul class="token-list" id="tokenList">
+                <li class="token-item">
+                  <div class="tok-info">
+                    <span class="tok-name">token_master_2026_q2</span>
+                    <span class="tok-role">MASTER_ACCESS</span>
+                  </div>
+                  <span class="tok-status active">ACTIVE</span>
+                </li>
+                <li class="token-item">
+                  <div class="tok-info">
+                    <span class="tok-name">token_visor_anonymous</span>
+                    <span class="tok-role">READ_ONLY_VISOR</span>
+                  </div>
+                  <span class="tok-status active">ACTIVE</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. Encryption Keys (Security Module) -->
+      <div class="card pos-hidden" id="card-encryption-keys">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // KEY</span>
+              <h3>Encryption Keys</h3>
+            </div>
+            <div class="preview-metric-text">AES-GCM</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">256-bit entropy verified</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Cryptographic Keys Configuration</h2>
+              <p>Settings for entropy pools, private key storage, and access cyphers.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// ENTROPY STATUS</h3>
+                <div class="spec-detail-line"><strong>Entropy Rating:</strong> 99.8% (Cryptographically Secure)</div>
+                <div class="spec-detail-line"><strong>Pool Provider:</strong> hardware_rand_oscillators</div>
+                <div class="spec-detail-line"><strong>Key Formats:</strong> PKCS#8 encoded PEM lines</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// CRYPTO CAPABILITIES</h3>
+                <div class="spec-detail-line"><strong>Supported Cyphers:</strong> AES-256-GCM, Chacha20-Poly1305</div>
+                <div class="spec-detail-line"><strong>Public Curve:</strong> Ed25519 signatures validation</div>
+                <div class="spec-detail-line"><strong>Hardware Decrypt:</strong> Enabled (Secure Enclave V2)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15. API Credentials (Security Module) -->
+      <div class="card pos-hidden" id="card-api-credentials">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // CRED</span>
+              <h3>API Credentials</h3>
+            </div>
+            <div class="preview-metric-text">9 Active</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">98.8% quota remaining</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>API Key Scopes & Quota Monitoring</h2>
+              <p>Review rate-limit scopes, active quotas, and service credentials.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="biz-table-wrapper" style="border: none; padding: 0;">
+              <table class="biz-table">
+                <thead>
+                  <tr>
+                    <th>Service Endpoint</th>
+                    <th>Key Scope</th>
+                    <th>Monthly Quota</th>
+                    <th>Usage Rate</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>/api/discovery/*</td>
+                    <td>WRITE_WORKSPACE</td>
+                    <td>100,000 requests</td>
+                    <td>1.2% (1,200)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                  <tr>
+                    <td>/api/dashboard/workspace/*</td>
+                    <td>READ_PAYLOADS</td>
+                    <td>500,000 requests</td>
+                    <td>4.8% (24,000)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                  <tr>
+                    <td>/api/security/tokens/*</td>
+                    <td>MASTER_KEYGEN</td>
+                    <td>10,000 requests</td>
+                    <td>0.2% (20)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DOCUMENT TRACKER MODULE CARDS ==================== -->
+
+      <!-- 16. Uploaded Documents Tracker (Document Tracker Module) -->
+      <div class="card pos-hidden" id="card-uploaded-docs">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">DOCS // REPO</span>
+              <h3>Document Tracker</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;" id="miniDocCount">6 DOCS</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Latest: startup_pitch_deck_2026.pdf</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Onecrew Document Tracker</h2>
+              <p>Repository of all context documents, specs, and strategic files uploaded to Onecrew.</p>
+            </div>
+            <button class="action-btn" id="btnTriggerDocUpload">+ Upload Document</button>
+          </div>
+          <div class="main-body business-container">
+            <div class="doc-filter-bar">
+              <div class="doc-search-wrapper">
+                <input type="text" id="docSearchInput" placeholder="Search documents by name or tag..." class="doc-search-input">
+              </div>
+              <div class="doc-pills">
+                <button class="doc-pill active" data-doc-filter="all">All (6)</button>
+                <button class="doc-pill" data-doc-filter="business">Business</button>
+                <button class="doc-pill" data-doc-filter="technical">Technical</button>
+                <button class="doc-pill" data-doc-filter="discovery">Discovery</button>
+                <button class="doc-pill" data-doc-filter="security">Security</button>
+              </div>
+            </div>
+            <div class="biz-table-wrapper" style="border: none; padding: 0;">
+              <table class="biz-table" id="docTrackerTable">
+                <thead>
+                  <tr>
+                    <th>Document Name</th>
+                    <th>Category</th>
+                    <th>Size</th>
+                    <th>Uploaded Date</th>
+                    <th>Parsing Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="docTableBody">
+                  <tr data-category="business">
+                    <td><span class="doc-icon">📄</span> startup_pitch_deck_2026.pdf</td>
+                    <td><span class="doc-tag">BUSINESS</span></td>
+                    <td>4.2 MB</td>
+                    <td>Jul 18, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                  <tr data-category="technical">
+                    <td><span class="doc-icon">📄</span> system_architecture_spec_v2.md</td>
+                    <td><span class="doc-tag">TECHNICAL</span></td>
+                    <td>384 KB</td>
+                    <td>Jul 15, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                  <tr data-category="discovery">
+                    <td><span class="doc-icon">📄</span> market_research_competitors.xlsx</td>
+                    <td><span class="doc-tag">DISCOVERY</span></td>
+                    <td>1.8 MB</td>
+                    <td>Jul 12, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                  <tr data-category="security">
+                    <td><span class="doc-icon">📄</span> security_compliance_policy.pdf</td>
+                    <td><span class="doc-tag">SECURITY</span></td>
+                    <td>2.1 MB</td>
+                    <td>Jul 10, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                  <tr data-category="business">
+                    <td><span class="doc-icon">📄</span> financial_projections_q3_q4.csv</td>
+                    <td><span class="doc-tag">FINANCE</span></td>
+                    <td>512 KB</td>
+                    <td>Jul 05, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                  <tr data-category="discovery">
+                    <td><span class="doc-icon">📄</span> user_interview_transcripts.txt</td>
+                    <td><span class="doc-tag">RESEARCH</span></td>
+                    <td>120 KB</td>
+                    <td>Jul 02, 2026</td>
+                    <td><span class="tbl-badge green">INDEXED</span></td>
+                    <td><button class="action-btn mini-btn">View</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 17. Ingestion & Indexing Pipeline (Document Tracker Module) -->
+      <div class="card pos-hidden" id="card-doc-pipeline">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">DOCS // PIPELINE</span>
+              <h3>RAG Ingestion</h3>
+            </div>
+            <div class="preview-metric-text text-green">100% SYNCED</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Vector Store: 1,420 Chunks</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Document Ingestion & Indexing Pipeline</h2>
+              <p>RAG embedding metrics, page parse statuses, and vector memory allocations.</p>
+            </div>
+          </div>
+          <div class="main-body metrics-dashboard">
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">TOTAL PAGES PARSED</span>
+                <span class="metric-value">148 Pages</span>
+                <span class="metric-trend text-green">100% OCR Accuracy</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">VECTOR EMBEDDINGS</span>
+                <span class="metric-value">1,420 Chunks</span>
+                <span class="metric-trend text-purple">text-embedding-3-large</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">VECTOR SEARCH LATENCY</span>
+                <span class="metric-value">14ms</span>
+                <span class="metric-trend text-blue">Pinecone / Milvus Cluster</span>
+              </div>
+            </div>
+            <div class="specs-grid" style="margin-top: 10px;">
+              <div class="spec-section-card">
+                <h3>// PIPELINE HEALTH</h3>
+                <div class="spec-detail-line"><strong>Text Extraction Engine:</strong> Unstructured.io PDF Parser</div>
+                <div class="spec-detail-line"><strong>Chunking Strategy:</strong> Recursive Character Splitter (500 tokens)</div>
+                <div class="spec-detail-line"><strong>Overlap Size:</strong> 50 tokens (10% context retention)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// MEMORY ALLOCATION</h3>
+                <div class="spec-detail-line"><strong>Total Ingested Size:</strong> 9.11 MB</div>
+                <div class="spec-detail-line"><strong>Context Index Buffer:</strong> Active memory pool 0x882B</div>
+                <div class="spec-detail-line"><strong>Agent Sync Gate:</strong> Context & Strategy Agents connected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18. Document Vault & Access Matrix (Document Tracker Module) -->
+      <div class="card pos-hidden" id="card-doc-categories">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">DOCS // VAULT</span>
+              <h3>Access Categories</h3>
+            </div>
+            <div class="preview-metric-text text-green">4 VAULTS</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Agent Access Scopes: Active</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Document Vault Access Categories</h2>
+              <p>Security isolation and agent scoping for uploaded workspace documents.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>💼 Business & Vision Vault</h3>
+                <div class="spec-detail-line"><strong>Files:</strong> pitch_deck_2026.pdf, financial_projections.csv</div>
+                <div class="spec-detail-line"><strong>Agent Access:</strong> Context Agent, Strategy Agent</div>
+                <div class="spec-detail-line"><strong>Sensitivity:</strong> CONFIDENTIAL (Internal Executive)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>🛠️ Technical Specs Vault</h3>
+                <div class="spec-detail-line"><strong>Files:</strong> system_architecture_spec_v2.md</div>
+                <div class="spec-detail-line"><strong>Agent Access:</strong> Architecture Agent, Developer Nodes</div>
+                <div class="spec-detail-line"><strong>Sensitivity:</strong> INTERNAL (Engineering Team)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>💡 Discovery & Market Vault</h3>
+                <div class="spec-detail-line"><strong>Files:</strong> market_research_competitors.xlsx, user_interviews.txt</div>
+                <div class="spec-detail-line"><strong>Agent Access:</strong> Context Agent, Strategy Agent</div>
+                <div class="spec-detail-line"><strong>Sensitivity:</strong> RESTRICTED (Product Strategy)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>🛡️ Security & Compliance Vault</h3>
+                <div class="spec-detail-line"><strong>Files:</strong> security_compliance_policy.pdf</div>
+                <div class="spec-detail-line"><strong>Agent Access:</strong> Security Shield Agent, Admin</div>
+                <div class="spec-detail-line"><strong>Sensitivity:</strong> RESTRICTED (Security Audit)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19. Document Upload Terminal (Document Tracker Module) -->
+      <div class="card pos-hidden" id="card-doc-upload-terminal">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">DOCS // INGEST</span>
+              <h3>Upload Terminal</h3>
+            </div>
+            <div class="method-badge post-badge">POST</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-code"><code>DROP_DOCUMENTS_HERE</code></div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <div class="endpoint-line">
+                <span class="method-badge post-badge">POST</span>
+                <span class="endpoint-url">/api/documents/upload</span>
+              </div>
+              <h2>Document Ingestion Console</h2>
+            </div>
+          </div>
+          <div class="main-body security-container">
+            <div class="upload-dropzone" id="uploadDropzone">
+              <div class="dropzone-content">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <h3>Drag & Drop Documents Here</h3>
+                <p>Supports .pdf, .md, .txt, .csv, .json (Max 25MB per file)</p>
+                <input type="file" id="docFileInput" multiple style="display: none;">
+                <button class="action-btn" id="btnSelectFile" style="margin-top: 10px;">Select Local File</button>
+              </div>
+            </div>
+            <div class="terminal-container" style="margin-top: 14px; height: 140px;">
+              <div class="terminal-header">
+                <span class="term-dot red"></span>
+                <span class="term-dot yellow"></span>
+                <span class="term-dot green"></span>
+                <span class="term-title">ingest_logger.terminal</span>
+              </div>
+              <pre class="terminal-body" id="docIngestTerminal"><code>// Document Ingestion Engine Ready.
+[AWAITING_FILE] Drag files into dropzone or select local file...</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ACTION CENTER MODULE CARDS ==================== -->
+
+      <!-- 20. Recommended Next Actions (Action Center Module) -->
+      <div class="card pos-hidden" id="card-action-recommendations">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">ACTIONS // NEXT</span>
+              <h3>Action Center</h3>
+            </div>
+            <span class="tbl-badge amber" style="font-size: 0.55rem; padding: 2px 5px;" id="miniActionCount">4 PENDING</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Top: Execute Step 4 Sync Build</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Action Center - Recommended Next Steps</h2>
+              <p>AI-synthesized priority action items calculated from system health, MVP steps, and agent telemetry.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="doc-pills" style="margin-bottom: 12px;">
+              <button class="action-filter-pill active" data-action-filter="all">All Actions (4)</button>
+              <button class="action-filter-pill" data-action-filter="high">High Priority (2)</button>
+              <button class="action-filter-pill" data-action-filter="medium">Medium (1)</button>
+              <button class="action-filter-pill" data-action-filter="low">Low (1)</button>
+            </div>
+            <div class="action-items-list" id="actionItemsList">
+              
+              <!-- Action Item 1 -->
+              <div class="action-item-card" data-priority="high" data-action-id="act-01">
+                <div class="action-item-header">
+                  <div class="action-title-group">
+                    <span class="priority-badge high">HIGH PRIORITY</span>
+                    <h3>Compile Step 4 Sync Build Matrix</h3>
+                  </div>
+                  <span class="action-agent-tag">Architecture Agent</span>
+                </div>
+                <p class="action-desc">MVP Strategy setup is complete (Step 3/4). Trigger target bundle compilation to complete discovery and generate release build assets.</p>
+                <div class="action-item-footer">
+                  <span class="action-meta">Estimated Impact: High | Time: ~5s</span>
+                  <button class="action-btn action-exec-btn" data-action="sync-build">Execute Action</button>
+                </div>
+              </div>
+
+              <!-- Action Item 2 -->
+              <div class="action-item-card" data-priority="high" data-action-id="act-02">
+                <div class="action-item-header">
+                  <div class="action-title-group">
+                    <span class="priority-badge high">HIGH PRIORITY</span>
+                    <h3>Rotate Active Master Security Token</h3>
+                  </div>
+                  <span class="action-agent-tag">Security Shield</span>
+                </div>
+                <p class="action-desc">Master token <code>token_master_2026_q2</code> has been active for over 12 hours. Execute security key generation to maintain zero-trust posture.</p>
+                <div class="action-item-footer">
+                  <span class="action-meta">Estimated Impact: Critical | Time: ~1s</span>
+                  <button class="action-btn action-exec-btn" data-action="rotate-token">Rotate Tokens</button>
+                </div>
+              </div>
+
+              <!-- Action Item 3 -->
+              <div class="action-item-card" data-priority="medium" data-action-id="act-03">
+                <div class="action-item-header">
+                  <div class="action-title-group">
+                    <span class="priority-badge medium">MEDIUM PRIORITY</span>
+                    <h3>Synchronize Financial Projections with Strategy Memory</h3>
+                  </div>
+                  <span class="action-agent-tag">Strategy Agent</span>
+                </div>
+                <p class="action-desc">Ingest uploaded document <code>financial_projections_q3_q4.csv</code> into Strategy Agent's context buffer to align SOM projections ($42M target).</p>
+                <div class="action-item-footer">
+                  <span class="action-meta">Estimated Impact: Medium | Time: ~3s</span>
+                  <button class="action-btn action-exec-btn" data-action="sync-financials">Sync Strategy</button>
+                </div>
+              </div>
+
+              <!-- Action Item 4 -->
+              <div class="action-item-card" data-priority="low" data-action-id="act-04">
+                <div class="action-item-header">
+                  <div class="action-title-group">
+                    <span class="priority-badge low">LOW PRIORITY</span>
+                    <h3>Run System Latency Optimization Routine</h3>
+                  </div>
+                  <span class="action-agent-tag">System Operator</span>
+                </div>
+                <p class="action-desc">Balance neural network node distribution to drop average cluster latency from 28ms to sub-15ms range.</p>
+                <div class="action-item-footer">
+                  <span class="action-meta">Estimated Impact: Maintenance | Time: ~2s</span>
+                  <button class="action-btn action-exec-btn" data-action="optimize-latency">Run Protocol</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 21. Action Execution Log (Action Center Module) -->
+      <div class="card pos-hidden" id="card-action-execution-log">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">ACTIONS // LOG</span>
+              <h3>Audit Log</h3>
+            </div>
+            <div class="preview-metric-text text-green">100% LOGGED</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Latest: Context Ingestion</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Action Execution Audit Log</h2>
+              <p>Chronological history of all automated and manual system operations executed.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="biz-table-wrapper" style="border: none; padding: 0;">
+              <table class="biz-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Action Executed</th>
+                    <th>Initiator</th>
+                    <th>Result / Output</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="actionAuditLogBody">
+                  <tr>
+                    <td>17:10:02</td>
+                    <td>Context Analyzer Ingestion</td>
+                    <td>Context Agent</td>
+                    <td>Confidence 95% Verified</td>
+                    <td><span class="tbl-badge green">SUCCESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>16:45:12</td>
+                    <td>Competitive Edge Vector Scan</td>
+                    <td>Strategy Agent</td>
+                    <td>4 Competitor Profiles Mapped</td>
+                    <td><span class="tbl-badge green">SUCCESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>15:20:00</td>
+                    <td>Master Security Token Issue</td>
+                    <td>Operator Admin</td>
+                    <td>Token token_master_2026_q2 Registered</td>
+                    <td><span class="tbl-badge green">SUCCESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>14:05:30</td>
+                    <td>Workspace Payload Boot</td>
+                    <td>System Cluster</td>
+                    <td>8/8 Discovery Steps Synced</td>
+                    <td><span class="tbl-badge green">SUCCESS</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 22. Automated Workflow Triggers (Action Center Module) -->
+      <div class="card pos-hidden" id="card-action-triggers">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">ACTIONS // TRIGGERS</span>
+              <h3>Auto Triggers</h3>
+            </div>
+            <div class="preview-metric-text">3 ACTIVE</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Doc Upload Auto-Sync: ON</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Automated Agent Workflow Triggers</h2>
+              <p>Configure automated system reaction rules for onecrew agent events.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              
+              <div class="spec-section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <h3>⚡ Trigger 01: Document Ingestion Sync</h3>
+                  <span class="tbl-badge green">ENABLED</span>
+                </div>
+                <div class="spec-detail-line"><strong>Event Condition:</strong> New file uploaded to Document Tracker</div>
+                <div class="spec-detail-line"><strong>Action Routine:</strong> Auto-parse chunks, embed vectors & notify Context Agent</div>
+              </div>
+
+              <div class="spec-section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <h3>⚡ Trigger 02: High Latency Auto-Balance</h3>
+                  <span class="tbl-badge green">ENABLED</span>
+                </div>
+                <div class="spec-detail-line"><strong>Event Condition:</strong> Latency metrics exceed 45ms for >5s</div>
+                <div class="spec-detail-line"><strong>Action Routine:</strong> Re-route edge sockets through secondary cluster</div>
+              </div>
+
+              <div class="spec-section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <h3>⚡ Trigger 03: Security Token Expiry Alert</h3>
+                  <span class="tbl-badge green">ENABLED</span>
+                </div>
+                <div class="spec-detail-line"><strong>Event Condition:</strong> Token age reaches 12 hours</div>
+                <div class="spec-detail-line"><strong>Action Routine:</strong> Flag high-priority action item in Action Center</div>
+              </div>
+
+              <div class="spec-section-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <h3>⚡ Trigger 04: MVP Step Auto-Advance</h3>
+                  <span class="tbl-badge gray">DISABLED</span>
+                </div>
+                <div class="spec-detail-line"><strong>Event Condition:</strong> Step confidence reaches 90%+</div>
+                <div class="spec-detail-line"><strong>Action Routine:</strong> Auto-trigger compilation without manual approval</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 23. Priority & Effort Matrix (Action Center Module) -->
+      <div class="card pos-hidden" id="card-action-priority">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">ACTIONS // MATRIX</span>
+              <h3>Priority Matrix</h3>
+            </div>
+            <div class="preview-metric-text">BALANCED</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">2 High Impact / Low Effort</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Action Priority & Effort Matrix</h2>
+              <p>Strategic breakdown of startup tasks by impact vs implementation complexity.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+              
+              <div class="spec-section-card" style="border-color: rgba(255, 255, 255, 0.3);">
+                <h3>🔥 High Impact / Low Effort (Quick Wins)</h3>
+                <div class="spec-detail-line">• Compile Step 4 Sync Build Target</div>
+                <div class="spec-detail-line">• Rotate Master Security Token</div>
+                <div class="spec-detail-line">• Run System Latency Protocol</div>
+              </div>
+
+              <div class="spec-section-card">
+                <h3>🚀 High Impact / High Effort (Strategic Projects)</h3>
+                <div class="spec-detail-line">• Full RAG Vector Memory Fine-tuning</div>
+                <div class="spec-detail-line">• Multi-Agent Parallel Autonomous Workflows</div>
+                <div class="spec-detail-line">• Custom Domain Security SSL Infrastructure</div>
+              </div>
+
+              <div class="spec-section-card">
+                <h3>🧹 Low Impact / Low Effort (Fill-in Tasks)</h3>
+                <div class="spec-detail-line">• Clear Ingestion Log History</div>
+                <div class="spec-detail-line">• Refresh Telemetry Canvas Graphs</div>
+              </div>
+
+              <div class="spec-section-card">
+                <h3>⏳ Low Impact / High Effort (De-prioritized)</h3>
+                <div class="spec-detail-line">• Legacy API Backward Compatibility Layer</div>
+                <div class="spec-detail-line">• Manual Database Table Schema Export</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== ORCHESTRATOR MODULE CARDS ==================== -->
+
+      <!-- Orchestrator: Pipeline Results (Main Card) -->
+      <div class="card pos-hidden" id="card-orchestrator-pipeline">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">ORCHESTRATOR</span>
+              <h3>Pipeline</h3>
+            </div>
+            <div class="preview-indicator pulsing-cyan"></div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text" id="orchestratorPreviewStatus">Ready to orchestrate</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Orchestrator Pipeline</h2>
+              <p>Plan → Execute → Synthesize — Full multi-agent orchestration results</p>
+            </div>
+          </div>
+          <div class="main-body orchestrator-container">
+
+            <!-- Run Trigger -->
+            <div class="orch-trigger-bar">
+              <div class="orch-input-group">
+                <input type="text" id="orchQueryInput" placeholder="Enter orchestration query (e.g., Build the MVP launch plan...)" autocomplete="off">
+                <button class="action-btn orch-run-btn" id="btnRunOrchestration">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  Run Orchestration
+                </button>
+              </div>
+            </div>
+
+            <!-- Pipeline Stages -->
+            <div class="orch-pipeline-stages" id="orchPipelineStages">
+              <div class="orch-stage" id="orchStagePlan">
+                <div class="orch-stage-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <span class="orch-stage-label">PLAN</span>
+                <div class="orch-stage-status">idle</div>
+              </div>
+              <div class="orch-stage-connector"></div>
+              <div class="orch-stage" id="orchStageExecute">
+                <div class="orch-stage-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <span class="orch-stage-label">EXECUTE</span>
+                <div class="orch-stage-status">idle</div>
+              </div>
+              <div class="orch-stage-connector"></div>
+              <div class="orch-stage" id="orchStageSynthesize">
+                <div class="orch-stage-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </div>
+                <span class="orch-stage-label">SYNTHESIZE</span>
+                <div class="orch-stage-status">idle</div>
+              </div>
+            </div>
+
+            <!-- Synthesis Output -->
+            <div class="orch-synthesis-panel" id="orchSynthesisPanel">
+              <div class="orch-synthesis-header">
+                <span class="orch-synthesis-badge">CEO SYNTHESIS</span>
+                <span class="orch-synthesis-time" id="orchSynthesisTime"></span>
+              </div>
+              <div class="orch-synthesis-body" id="orchSynthesisBody">
+                <p class="orch-placeholder-text">Run an orchestration to see the CEO Agent's synthesized response here.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Orchestrator: Execution Steps -->
+      <div class="card pos-hidden" id="card-orchestrator-steps">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">STEPS</span>
+              <h3>Execution Log</h3>
+            </div>
+            <div class="preview-metric-text" id="orchStepCount">0 steps</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Agent step results</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Execution Step Results</h2>
+              <p>Individual agent and tool outputs from the orchestration pipeline.</p>
+            </div>
+          </div>
+          <div class="main-body">
+            <div class="orch-steps-table-wrapper">
+              <table class="orch-steps-table">
+                <thead>
+                  <tr>
+                    <th>Step</th>
+                    <th>Agent / Tool</th>
+                    <th>Task</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="orchStepsTableBody">
+                  <tr>
+                    <td colspan="5" class="orch-empty-row">No orchestration steps yet. Run an orchestration to see results.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="orch-step-detail" id="orchStepDetail">
+              <div class="orch-step-detail-header">
+                <span class="orch-step-detail-title">Select a step to view its full output</span>
+              </div>
+              <pre class="orch-step-detail-body" id="orchStepDetailBody"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orchestrator: Agent Outputs -->
+      <div class="card pos-hidden" id="card-orchestrator-agents">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-green">AGENTS</span>
+              <h3>Agent Outputs</h3>
+            </div>
+            <div class="preview-metric-text" id="orchAgentCount">0 agents</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Multi-agent responses</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Agent Response Outputs</h2>
+              <p>Full responses from each agent involved in the orchestration.</p>
+            </div>
+          </div>
+          <div class="main-body">
+            <div class="orch-agent-outputs" id="orchAgentOutputs">
+              <div class="orch-placeholder-text">Run an orchestration to view individual agent outputs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orchestrator: Run History -->
+      <div class="card pos-hidden" id="card-orchestrator-history">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">HISTORY</span>
+              <h3>Run Log</h3>
+            </div>
+            <div class="preview-metric-text" id="orchRunCount">0 runs</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Past orchestration runs</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Orchestration Run History</h2>
+              <p>Timeline of all orchestration pipeline executions.</p>
+            </div>
+          </div>
+          <div class="main-body">
+            <div class="orch-history-list" id="orchHistoryList">
+              <div class="orch-placeholder-text">No orchestration runs yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Module Nav Bar Selector -->
+    <footer class="dashboard-footer">
+      <div class="module-nav">
+        <button class="nav-tab active" data-module="dashboard">
+          <span class="nav-icon">📊</span>
+          DASHBOARD_CORE
+        </button>
+        <button class="nav-tab" data-module="modules">
+          <span class="nav-icon">▦</span>
+          WORKSPACE_MODULES
+        </button>
+        <button class="nav-tab" data-module="discovery">
+          <span class="nav-icon">💡</span>
+          DISCOVERY_STEPS
+        </button>
+        <button class="nav-tab" data-module="orchestrator">
+          <span class="nav-icon">🧠</span>
+          ORCHESTRATOR
+        </button>
+        <button class="nav-tab" data-module="security">
+          <span class="nav-icon">🛡️</span>
+          SECURITY_SHIELD
+        </button>
+        <button class="nav-tab" data-module="documents">
+          <span class="nav-icon">📄</span>
+          DOC_TRACKER
+        </button>
+        <button class="nav-tab" data-module="actions">
+          <span class="nav-icon">⚡</span>
+          ACTION_CENTER
+        </button>
+      </div>
+    </footer>
+  </div>
+  
+  <script src="app.js?v=8"></script>
+</body>
+</html>

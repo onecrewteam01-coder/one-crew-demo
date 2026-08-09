@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneCrew Cockpit - Dynamic Agentic Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@400;600;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-matte-black: #050505;
+            --bg-drawer: #090909;
+            --foreground-offwhite: #e5e2e1;
+            --accent-muted-blue: #adc6ff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-hover-bg: rgba(255, 255, 255, 0.05);
+            --glass-hover-border: rgba(255, 255, 255, 0.2);
+            --font-sora: 'Sora', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: var(--font-sans); 
+            background-color: var(--bg-matte-black); 
+            color: var(--foreground-offwhite); 
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            position: relative;
+        }
+
+        /* --- OVERLAY SLIDE-OUT DRAWER MODULE --- */
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -340px; 
+            width: 340px;
+            height: 100vh;
+            background-color: var(--bg-drawer);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 90;
+            transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 30px 0 60px rgba(0,0,0,0.8);
+        }
+        .drawer.open {
+            left: 0;
+        }
+        .drawer-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-brand {
+            font-family: var(--font-sora);
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+        .close-drawer-btn {
+            color: rgba(255,255,255,0.4);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .drawer-box-index {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .drawer-section-title {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .box-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .drawer-box-item {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .drawer-box-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .drawer-box-item.active-on-dash {
+            border-color: var(--accent-muted-blue);
+            color: var(--accent-muted-blue);
+            background: rgba(173, 198, 255, 0.05);
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+        }
+        .drawer-box-item.active-on-dash .status-dot {
+            background: var(--accent-muted-blue);
+            box-shadow: 0 0 8px var(--accent-muted-blue);
+        }
+
+        .tabs {
+            padding: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tab {
+            flex: 1;
+            min-width: 70px;
+            padding: 10px 6px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-align: center;
+            cursor: pointer;
+            color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.01);
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-color: var(--glass-border);
+        }
+
+        /* --- MAIN OBSERVED CANVAS WORKSPACE --- */
+        .workspace {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            width: 100%;
+        }
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .hamburger-menu {
+            font-size: 24px;
+            cursor: pointer;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hamburger-menu:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .title {
+            font-family: var(--font-sora);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .subtitle {
+            font-family: var(--font-sans);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .status-bar { display: flex; gap: 10px; }
+        .status-badge { 
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* --- ASYMMETRIC GRID MATRIX --- */
+        .tab-panel { display: none; }
+        .tab-panel.active { 
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 28px;
+        }
+
+        .section { 
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px; 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none; 
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 28px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: zoom-in;
+            min-height: 280px;
+        }
+        .section:hover {
+            background-color: var(--glass-hover-bg);
+            border-color: var(--glass-hover-border);
+            transform: translateY(-2px);
+        }
+
+        .section.slot-0 { grid-column: span 7; } 
+        .section.slot-1 { grid-column: span 5; } 
+        .section.slot-2 { grid-column: span 12; min-height: 320px; } 
+
+        .section-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .section-title { 
+            font-family: var(--font-sora);
+            font-weight: 600; 
+            font-size: 1.1rem; 
+            color: #fff;
+        }
+        .section-method { 
+            font-size: 10px; 
+            font-family: var(--font-mono); 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-weight: 700; 
+        }
+        .method-get { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .method-post { background: rgba(245, 158, 11, 0.15); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+        
+        .endpoint { 
+            font-family: var(--font-mono); 
+            font-size: 11px; 
+            color: var(--accent-muted-blue); 
+            margin-bottom: 20px;
+        }
+
+        .input-group { margin-bottom: 14px; }
+        label { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; display: block; margin-bottom: 6px; }
+        textarea, input[type="text"] { 
+            width: 100%; 
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border); 
+            border-radius: 8px; 
+            padding: 12px 14px;
+            color: #fff;
+            font-family: var(--font-sans); 
+            font-size: 0.88rem; 
+            resize: none;
+            outline: none;
+        }
+        
+        button { 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            font-family: var(--font-mono);
+            font-size: 11px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        button.primary { background: #fff; color: #000; }
+        button.primary:hover { background: rgba(255,255,255,0.9); }
+        
+        .response-box { 
+            margin-top: 16px; 
+            background: #090909; 
+            color: #a5f3fc; 
+            padding: 16px; 
+            border-radius: 8px; 
+            font-family: var(--font-mono);
+            font-size: 11px; 
+            white-space: pre-wrap; 
+            word-break: break-all; 
+            max-height: 240px; 
+            overflow-y: auto; 
+            display: none; 
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- DOUBLE-CLICK EXPAND INTERACTION LAYER --- */
+        .zoomed-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .zoomed-card-wrapper {
+            width: 100%;
+            max-width: 950px;
+            background: #0d0d0d;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            cursor: zoom-out;
+        }
+        .zoomed-card-wrapper .response-box {
+            max-height: 480px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="drawer" id="side-drawer">
+        <div>
+            <div class="drawer-header">
+                <div class="drawer-brand">Navigation Matrix</div>
+                <div class="close-drawer-btn" onclick="toggleDrawer()">✕</div>
+            </div>
+
+            <div class="drawer-box-index">
+                <span class="drawer-section-title">Available Modules</span>
+                <div class="box-list-container" id="drawer-box-list"></div>
+            </div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column;">
+            <div class="tabs">
+                <div class="tab active" data-panel="dashboard">📊 Dash</div>
+                <div class="tab" data-panel="workspace">📁 Work</div>
+                <div class="tab" data-panel="discovery">🔍 Disc</div>
+                <div class="tab" data-panel="auth">🔐 Auth</div>
+            </div>
+            <div style="padding: 20px; font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.25); border-top: 1px solid rgba(255,255,255,0.05);">
+                OBS_CONNECTED // TRAN_UP
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div class="workspace-header">
+            <div class="header-left">
+                <div class="hamburger-menu" onclick="toggleDrawer()">☰</div>
+                <div>
+                    <h1 class="title">Onecrew Dashboard</h1>
+                    <p class="subtitle">Overview and analytical breakdown of your startup profile.</p>
+                </div>
+            </div>
+            <div class="status-bar" id="status-bar">
+                <span class="status-badge">⏳ Engine Handshake...</span>
+            </div>
+        </div>
+
+        <!-- PANEL 1: DASHBOARD -->
+        <div class="tab-panel active" id="panel-dashboard">
+            <div class="section" data-index="0" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">System Status Overview</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/overview</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/overview', null, 'res-overview', false)">Execute Stream</button>
+                    <div class="response-box" id="res-overview"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="1" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Full Structural Workspace Payload</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/workspace/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/workspace/demo', null, 'res-workspace', false)">Execute Stream</button>
+                    <div class="response-box" id="res-workspace"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="2" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Business Vision Metrics</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/business/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/business/demo', null, 'res-biz', false)">Execute Stream</button>
+                    <div class="response-box" id="res-biz"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="3" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Identity & Branding Profile</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/branding/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/branding/demo', null, 'res-brand', false)">Execute Stream</button>
+                    <div class="response-box" id="res-brand"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="4" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Core Product Spec Matrix</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/product/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/product/demo', null, 'res-prod', false)">Execute Stream</button>
+                    <div class="response-box" id="res-prod"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="5" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Architecture & Engineering Stack</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/engineering/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/engineering/demo', null, 'res-eng', false)">Execute Stream</button>
+                    <div class="response-box" id="res-eng"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="6" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Project Management & Milestones</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/dashboard/project-management/demo</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/dashboard/project-management/demo', null, 'res-pm', false)">Execute Stream</button>
+                    <div class="response-box" id="res-pm"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 2: WORKSPACE -->
+        <div class="tab-panel" id="panel-workspace">
+            <div class="section" data-index="13" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Context Agent Routing Engine</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/agents/context/state</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/agents/context/state', null, 'res-ctx-agent', false)">Sync Agent Node</button>
+                    <div class="response-box" id="res-ctx-agent"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="14" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Strategy Agent Framework Matrix</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/agents/strategy/state</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/agents/strategy/state', null, 'res-strat-agent', false)">Sync Agent Node</button>
+                    <div class="response-box" id="res-strat-agent"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="15" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Architecture Optimization Core</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/agents/architecture/state</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/agents/architecture/state', null, 'res-arch-agent', false)">Sync Agent Node</button>
+                    <div class="response-box" id="res-arch-agent"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: DISCOVERY -->
+        <div class="tab-panel" id="panel-discovery">
+            <div class="section" data-index="7" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Step 1 — Startup Context Analyzer</span>
+                        <span class="section-method method-post">POST</span>
+                    </div>
+                    <div class="endpoint">/api/discovery/analyze</div>
+                    <div class="input-group">
+                        <label>Startup Description:</label>
+                        <textarea id="in-desc" rows="2" placeholder="AI-powered structural management tool..."></textarea>
+                    </div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('POST', '/api/discovery/analyze', { description: document.getElementById('in-desc').value || 'AI interview system' }, 'res-analyze', false)">Dispatch Node</button>
+                    <div class="response-box" id="res-analyze"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="8" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Step 2 — Competitive Advantage Edge</span>
+                        <span class="section-method method-post">POST</span>
+                    </div>
+                    <div class="endpoint">/api/discovery/competitive-advantage</div>
+                    <div class="input-group">
+                        <label>Session ID:</label>
+                        <input type="text" id="in-sid2" placeholder="paste engine session token">
+                    </div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('POST', '/api/discovery/competitive-advantage', { sessionId: document.getElementById('in-sid2').value, differentiators: '10x faster telemetry metrics pipeline' }, 'res-comp', false)">Dispatch Node</button>
+                    <div class="response-box" id="res-comp"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="9" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Step 3 — MVP Strategy Planning</span>
+                        <span class="section-method method-post">POST</span>
+                    </div>
+                    <div class="endpoint">/api/discovery/mvp</div>
+                    <div class="input-group">
+                        <label>Session ID:</label>
+                        <input type="text" id="in-sid3" placeholder="paste session token">
+                    </div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('POST', '/api/discovery/mvp', { sessionId: document.getElementById('in-sid3').value, mvpDescription: 'Core real-time streaming bento engine interface' }, 'res-mvp', false)">Dispatch Node</button>
+                    <div class="response-box" id="res-mvp"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="10" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">🏗️ Build Workspace Architecture Matrix</span>
+                        <span class="section-method method-post">POST</span>
+                    </div>
+                    <div class="endpoint">/api/discovery/generate-workspace</div>
+                    <div class="input-group">
+                        <label>Target Session ID Context:</label>
+                        <input type="text" id="in-sid-gen" placeholder="session token text">
+                    </div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('POST', '/api/discovery/generate-workspace', { sessionId: document.getElementById('in-sid-gen').value }, 'res-gen', false)">Initialize Sync Build</button>
+                    <div class="response-box" id="res-gen"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 4: AUTH -->
+        <div class="tab-panel" id="panel-auth">
+            <div class="section" data-index="11" ondblclick="zoomCard(this)">
+                <div>
+                    <div class="section-header">
+                        <span class="section-title">Secure Workspace Aggregator Summary</span>
+                        <span class="section-method method-get">GET</span>
+                    </div>
+                    <div class="endpoint">/api/workspace/summary — requires structural token authorization mapping</div>
+                </div>
+                <div>
+                    <button class="primary" onclick="callApi('GET', '/api/workspace/summary', null, 'res-ws', true)">Send Guard Request</button>
+                    <div class="response-box" id="res-ws"></div>
+                </div>
+            </div>
+
+            <div class="section" data-index="12" style="cursor: default;">
+                <div class="section-title" style="margin-bottom: 8px;">Active Handshake Memory Cache Registry</div>
+                <div style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.4);">
+                    JWT Session Context Value: <code id="token-display" style="color: var(--accent-muted-blue); word-break: break-all;">None Loaded</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="zoomed-overlay" id="zoom-viewport" onclick="closeZoom()">
+        <div class="zoomed-card-wrapper" id="zoom-content-slot" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script>
+        // --- Access Token Orchestration ---
+        const hash = window.location.hash;
+        let token = null;
+        if (hash) {
+            const hashParams = new URLSearchParams(hash.substring(1));
+            token = hashParams.get('access_token');
+            if (token) {
+                localStorage.setItem('supabase.auth.token', token);
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+        }
+        if (!token) token = localStorage.getItem('supabase.auth.token');
+
+        const tokenDisplay = document.getElementById('token-display');
+        if (token && tokenDisplay) tokenDisplay.textContent = token;
+
+        // --- System Integrity Health Check Diagnostics ---
+        fetch('/api/health')
+            .then(r => r.json())
+            .then(d => {
+                document.getElementById('status-bar').innerHTML =
+                    `<span class="status-badge" style="border-color: rgba(52,211,153,0.3); color: #34d399;">● SYS_ONLINE: ${d.status}</span>` +
+                    `<span class="status-badge" style="border-color: ${token ? 'rgba(52,211,153,0.3)' : 'rgba(248,113,113,0.3)'}; color: ${token ? '#34d399' : '#f87171'}; font-weight: bold;">${token ? '🔑 TOKEN_FOUND' : '⚠️ NO_AUTH_KEY'}</span>`;
+            })
+            .catch(() => {
+                document.getElementById('status-bar').innerHTML = '<span class="status-badge" style="border-color: rgba(248,113,113,0.3); color: #f87171;">● SYS_OFFLINE_UNREACHABLE</span>';
+            });
+
+        // --- Drawer Open/Close Action Toggle ---
+        function toggleDrawer() {
+            document.getElementById('side-drawer').classList.toggle('open');
+        }
+
+        // --- Tab Switching Matrix Node ---
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const panelId = 'panel-' + tab.dataset.panel;
+                document.getElementById(panelId).classList.add('active');
+                
+                initializeQueueForActivePanel();
+            });
+        });
+
+        // --- Universal Runtime API Engine Request Agent ---
+        async function callApi(method, url, body, resId, useAuth) {
+            const resBox = document.getElementById(resId);
+            resBox.style.display = 'block';
+            resBox.textContent = '⏳ Awaiting stream verification handshake...';
+
+            const opts = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body && method !== 'GET') opts.body = JSON.stringify(body);
+            if (useAuth && token) opts.headers['Authorization'] = 'Bearer ' + token;
+
+            try {
+                const res = await fetch(url, opts);
+                const data = await res.json();
+                resBox.textContent = `[HTTP_${res.status}]\n\n${JSON.stringify(data, null, 2)}`;
+                resBox.style.color = res.ok ? '#93e6fb' : '#f87171';
+            } catch (err) {
+                resBox.textContent = '❌ Handshake Exception Protocol Error: ' + err.message;
+                resBox.style.color = '#f87171';
+            }
+        }
+
+        // --- Double Click Card Scale Focus Protocol Layer ---
+        let currentOriginalCard = null;
+        function zoomCard(cardElement) {
+            currentOriginalCard = cardElement;
+            const overlay = document.getElementById('zoom-viewport');
+            const contentSlot = document.getElementById('zoom-content-slot');
+            
+            contentSlot.innerHTML = cardElement.innerHTML;
+            
+            const sourceInputs = cardElement.querySelectorAll('input, textarea');
+            const clonedInputs = contentSlot.querySelectorAll('input, textarea');
+            sourceInputs.forEach((input, index) => {
+                clonedInputs[input] ? clonedInputs[index].value = input.value : null;
+                clonedInputs[index].addEventListener('input', (e) => {
+                    sourceInputs[index].value = e.target.value;
+                });
+            });
+
+            const clonedButtons = contentSlot.querySelectorAll('button');
+            const sourceButtons = cardElement.querySelectorAll('button');
+            sourceButtons.forEach((btn, idx) => {
+                const clickAttr = btn.getAttribute('onclick');
+                if(clickAttr) clonedButtons[idx].setAttribute('onclick', clickAttr);
+            });
+
+            overlay.style.display = 'flex';
+        }
+
+        function closeZoom() {
+            document.getElementById('zoom-viewport').style.display = 'none';
+            if (currentOriginalCard) {
+                const activeFocusResponses = document.getElementById('zoom-content-slot').querySelectorAll('.response-box');
+                const baseCanvasResponses = currentOriginalCard.querySelectorAll('.response-box');
+                activeFocusResponses.forEach((box, index) => {
+                    if (box.style.display === 'block') {
+                        baseCanvasResponses[index].style.display = 'block';
+                        baseCanvasResponses[index].textContent = box.textContent;
+                        baseCanvasResponses[index].style.color = box.style.color;
+                    }
+                });
+            }
+        }
+
+        // --- FIFO SWAP ENGINE ---
+        let activeCardQueue = [];
+
+        function initializeQueueForActivePanel() {
+            const activePanel = document.querySelector('.tab-panel.active');
+            const cards = activePanel.querySelectorAll('.section');
+            const listContainer = document.getElementById('drawer-box-list');
+            
+            listContainer.innerHTML = ''; 
+            
+            cards.forEach(card => card.style.display = 'none');
+            
+            activeCardQueue = [];
+            const initialCount = Math.min(cards.length, 3);
+            for(let i = 0; i < initialCount; i++) {
+                activeCardQueue.push(cards[i]);
+            }
+            
+            refreshLayoutRender();
+            
+            cards.forEach(card => {
+                const titleText = card.querySelector('.section-title').textContent;
+                const indexId = card.getAttribute('data-index');
+                
+                const item = document.createElement('div');
+                item.className = 'drawer-box-item';
+                item.setAttribute('data-target-idx', indexId);
+                
+                const label = document.createElement('span');
+                label.textContent = titleText;
+                
+                const indicator = document.createElement('div');
+                indicator.className = 'status-dot';
+                
+                item.appendChild(label);
+                item.appendChild(indicator);
+                
+                item.addEventListener('click', () => {
+                    if (activeCardQueue.includes(card)) return; 
+                    
+                    if (activeCardQueue.length >= 3) {
+                        activeCardQueue.shift();
+                    }
+                    
+                    activeCardQueue.push(card);
+                    
+                    refreshLayoutRender();
+                    toggleDrawer(); 
+                });
+                
+                listContainer.appendChild(item);
+            });
+            
+            updateDrawerStatusHighlights();
+        }
+
+        function refreshLayoutRender() {
+            document.querySelectorAll('.section').forEach(card => {
+                card.style.display = 'none';
+                card.classList.remove('slot-0', 'slot-1', 'slot-2');
+            });
+            
+            activeCardQueue.forEach((card, slotIndex) => {
+                card.style.display = 'flex';
+                card.classList.add(`slot-${slotIndex}`); 
+            });
+            
+            updateDrawerStatusHighlights();
+        }
+
+        function updateDrawerStatusHighlights() {
+            document.querySelectorAll('.drawer-box-item').forEach(item => {
+                const targetId = item.getAttribute('data-target-idx');
+                const matchingCard = document.querySelector(`.section[data-index="${targetId}"]`);
+                
+                if (activeCardQueue.includes(matchingCard)) {
+                    item.classList.add('active-on-dash');
+                } else {
+                    item.classList.remove('active-on-dash');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeQueueForActivePanel();
+        });
+    </script>
+</body>
+</html>

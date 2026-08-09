@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onecrew Cockpit - Dynamic Agentic Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=8">
+  <style>
+    /* Grid layout for the new Workspace view */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+      width: 100%;
+    }
+
+    /* Red-bordered theme buttons */
+    .workspace-btn {
+      background: rgba(20, 20, 20, 0.6);
+      border: 1px solid #ef4444; /* Cyberpunk Red Border */
+      color: #f3f4f6;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.05);
+    }
+
+    /* Hover states keeping consistent with the console glow */
+    .workspace-btn:hover {
+      background: rgba(239, 68, 68, 0.08);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .workspace-btn .btn-prefix {
+      font-size: 0.65rem;
+      color: #ef4444;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient floating glows (extremely subtle, matte opacity) -->
+  <div class="bg-glow bg-glow-purple"></div>
+  <div class="bg-glow bg-glow-white"></div>
+  
+  <div class="dashboard-wrapper">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 17L12 22L22 17" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h1>ONECREW COCKPIT</h1>
+          <p>Multi-agent coordination system</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="status-badge status-healthy">
+          <span class="pulse-dot"></span>
+          SYS_ONLINE: healthy
+        </div>
+        <div class="status-badge status-token">
+          <svg class="key-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3M15.5 7.5L14 9M18.5 4.5L17 6"/>
+          </svg>
+          TOKEN_FOUND
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main class="dashboard-content" id="dashboardWorkspace">
+      
+      <!-- ==================== DASHBOARD MODULE CARDS ==================== -->
+      
+      <!-- 1. AI Agent Hub (Default Main Card) -->
+      <div class="card pos-main" id="card-agent-hub">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">AGENT HUB</span>
+              <h3>Coordination</h3>
+            </div>
+            <div class="preview-indicator pulsing-cyan"></div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Context Agent: Active</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Agent Hub Dashboard</h2>
+              <p>Communicate with and orchestrate startup AI agents in real-time.</p>
+            </div>
+            <div class="agent-selectors">
+              <button class="agent-tab active" data-agent="context">
+                <span class="avatar tab-av">C</span>
+                Context Agent
+              </button>
+              <button class="agent-tab" data-agent="strategy">
+                <span class="avatar tab-av">S</span>
+                Strategy Agent
+              </button>
+              <button class="agent-tab" data-agent="architecture">
+                <span class="avatar tab-av">A</span>
+                Architecture Agent
+              </button>
+            </div>
+          </div>
+          <div class="main-body chat-container">
+            <div class="chat-messages" id="chatMessages">
+              <div class="message system">
+                <div class="message-meta">SYSTEM UPDATE</div>
+                <div class="message-text">Multi-Agent framework initialized. Context, Strategy, and Architecture nodes online.</div>
+              </div>
+              <div class="message agent" data-agent="context">
+                <div class="message-header">
+                  <span class="avatar chat-av">C</span>
+                  <span class="agent-name">Context Agent</span>
+                  <span class="message-time">17:10</span>
+                </div>
+                <div class="message-text">Hello! I've loaded the startup profile directory. Ready to analyze context or structural payload metrics.</div>
+              </div>
+            </div>
+            <div class="chat-input-wrapper">
+              <div class="quick-prompts">
+                <button class="prompt-chip" data-prompt="/analyze context">/analyze context</button>
+                <button class="prompt-chip" data-prompt="/build architecture">/build architecture</button>
+                <button class="prompt-chip" data-prompt="/optimize load">/optimize load</button>
+              </div>
+              <form class="chat-form" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Send system instructions or query agents..." autocomplete="off">
+                <button type="submit" class="send-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Workspace Payload (Dashboard Module) -->
+      <div class="card pos-side-1" id="card-workspace-payload">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">GET // PAYLOAD</span>
+              <h3>Workspace Payload</h3>
+            </div>
+            <div class="method-badge get-badge">GET</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-code">
+              <code>{ "status": "success", "id": "demo" }</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <div class="endpoint-line">
+                <span class="method-badge get-badge">GET</span>
+                <span class="endpoint-url">/api/dashboard/workspace/payload</span>
+              </div>
+              <h2>Full Workspace Structural Payload</h2>
+            </div>
+            <button class="action-btn" id="btnExecuteStream">Execute Stream</button>
+          </div>
+          <div class="main-body terminal-container">
+            <div class="terminal-header">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
+              <span class="term-title">payload_stream.json</span>
+            </div>
+            <pre class="terminal-body" id="payloadTerminal"><code>{
+  "success": true,
+  "data": {
+    "id": "demo_profile",
+    "createdAt": "2026-07-11T17:10:00Z",
+    "status": "ready",
+    "discoveryMeta": {
+      "totalSteps": 8,
+      "completedSteps": 8,
+      "confidenceScores": {
+        "problemUnderstanding": 0.95,
+        "targetAudience": 0.9,
+        "productCategory": 0.92
+      }
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. System Status Metrics (Dashboard Module) -->
+      <div class="card pos-side-2" id="card-system-metrics">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-green">LIVE // METRICS</span>
+              <h3>System Overview</h3>
+            </div>
+            <div class="preview-metric-text" id="miniLatencyText">28ms</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-sparkline">
+              <canvas id="miniSparklineCanvas" width="240" height="40"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>System Status & Real-time Metrics</h2>
+              <p>Live health and operation indicators of running neural agent clusters.</p>
+            </div>
+          </div>
+          <div class="main-body metrics-dashboard">
+            <div class="metrics-grid">
+              <div class="metric-item">
+                <span class="metric-label">NETWORK LATENCY</span>
+                <span class="metric-value" id="latencyVal">28ms</span>
+                <span class="metric-trend text-green">Stable</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">MEMORY LOAD</span>
+                <span class="metric-value" id="memVal">43%</span>
+                <span class="metric-trend text-purple">14.2 / 32 GB</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">AGENT LOAD</span>
+                <span class="metric-value">0.82 TF</span>
+                <span class="metric-trend text-blue">9 cores active</span>
+              </div>
+            </div>
+            <div class="chart-container-large">
+              <div class="chart-header">
+                <h3>Agent Network Core Metrics (Live)</h3>
+                <span class="chart-legend">
+                  <span class="legend-color-dot purple"></span> Latency
+                  <span class="legend-color-dot green"></span> Memory
+                </span>
+              </div>
+              <canvas id="liveMetricsChart" width="800" height="280"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Business Vision (Dashboard Module) -->
+      <div class="card pos-side-3" id="card-business-vision">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-purple">VAL // BIZ</span>
+              <h3>Business Vision</h3>
+            </div>
+            <div class="preview-metric-text">$4.2B TAM</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">SOM target: $42M</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Business Vision Projections</h2>
+              <p>Startup market projections, vector metrics, and core vision targets.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="biz-metrics-row">
+              <div class="biz-card">
+                <h4>TAM (Total Addressable Market)</h4>
+                <div class="biz-val">$4.2B</div>
+                <div class="biz-sub">Target sector growth CAGR 12.8%</div>
+              </div>
+              <div class="biz-card">
+                <h4>SAM (Service Addressable Market)</h4>
+                <div class="biz-val">$840M</div>
+                <div class="biz-sub">Primary geographic sector launch</div>
+              </div>
+              <div class="biz-card">
+                <h4>SOM (Service Obtainable Market)</h4>
+                <div class="biz-val">$42M</div>
+                <div class="biz-sub">3-Year market capture target</div>
+              </div>
+            </div>
+            <div class="biz-table-wrapper">
+              <h3>Venture Milestone Allocations</h3>
+              <table class="biz-table">
+                <thead>
+                  <tr>
+                    <th>Milestone</th>
+                    <th>Target Date</th>
+                    <th>Required Funding</th>
+                    <th>Confidence Score</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Phase 1: Seed Validation</td>
+                    <td>Q3 2026</td>
+                    <td>$250k</td>
+                    <td>94%</td>
+                    <td><span class="tbl-badge green">COMPLETED</span></td>
+                  </tr>
+                  <tr>
+                    <td>Phase 2: MVP Stream Launch</td>
+                    <td>Q1 2027</td>
+                    <td>$800k</td>
+                    <td>88%</td>
+                    <td><span class="tbl-badge amber">IN_PROGRESS</span></td>
+                  </tr>
+                  <tr>
+                    <td>Phase 3: Core Growth Scale</td>
+                    <td>Q4 2027</td>
+                    <td>$2.5M</td>
+                    <td>75%</td>
+                    <td><span class="tbl-badge gray">QUEUED</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Core Spec Matrix (Dashboard Module) -->
+      <div class="card pos-side-4" id="card-core-specs">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-blue">SPEC // DOCS</span>
+              <h3>Core Spec Matrix</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">STABLE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Frontend signals documented.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Core Product Specification Matrix</h2>
+              <p>Static technical features cataloged by agent nodes.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// COMPONENT 01: FRONTEND ROUTER</h3>
+                <div class="spec-detail-line"><strong>Routing Mode:</strong> Client-side Virtual DOM</div>
+                <div class="spec-detail-line"><strong>State Manager:</strong> Translucent Signal Bus</div>
+                <div class="spec-detail-line"><strong>Style Standard:</strong> Grid-centric CSS3 Variables</div>
+                <div class="spec-detail-line"><strong>Latency Target:</strong> &lt; 50ms (Core Swaps)</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// COMPONENT 02: ORCHESTRATION PIPELINE</h3>
+                <div class="spec-detail-line"><strong>Framework:</strong> NeuralAgent Cluster V2</div>
+                <div class="spec-detail-line"><strong>Communication Protocol:</strong> REST Streaming JSON</div>
+                <div class="spec-detail-line"><strong>Sync Gate:</strong> Latency Oscillator</div>
+                <div class="spec-detail-line"><strong>Confidence threshold:</strong> 85% required for auto-merge</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// COMPONENT 03: TELEMETRY ENGINE</h3>
+                <div class="spec-detail-line"><strong>Engine:</strong> HTML5 2D Canvas Context</div>
+                <div class="spec-detail-line"><strong>Poller Rate:</strong> 10Hz</div>
+                <div class="spec-detail-line"><strong>Data Buffer:</strong> 30 historical array keys</div>
+                <div class="spec-detail-line"><strong>Visualizer Filter:</strong> Cubic Bezier Oscillators</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== DISCOVERY MODULE CARDS ==================== -->
+
+      <!-- 6. Context Analyzer (Discovery Module) -->
+      <div class="card pos-hidden" id="card-context-analyzer">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 01</span>
+              <h3>Context Analyzer</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">DONE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Seed metrics ingested.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 1: Startup Context Analyzer</h2>
+              <p>Baseline parameters configuration logged during initialization.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// INGESTION PARAMETERS</h3>
+                <div class="spec-detail-line"><strong>Sector:</strong> DevTool SaaS Orchestrator</div>
+                <div class="spec-detail-line"><strong>Seed Focus:</strong> Multi-Agent Terminal Client</div>
+                <div class="spec-detail-line"><strong>Access Tokens:</strong> Active master keys registered</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// DEMOGRAPHICS SCAN</h3>
+                <div class="spec-detail-line"><strong>Primary Target:</strong> Developer teams & Architects</div>
+                <div class="spec-detail-line"><strong>Painpoint Focus:</strong> Deployment friction & logs latency</div>
+                <div class="spec-detail-line"><strong>Valuation Baseline:</strong> Pre-seed market metrics matched</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Competitive Edge (Discovery Module) -->
+      <div class="card pos-hidden" id="card-competitive-edge">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 02</span>
+              <h3>Competitive Edge</h3>
+            </div>
+            <span class="tbl-badge green" style="font-size: 0.55rem; padding: 2px 5px;">DONE</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Competitive vectors mapped.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 2: Competitive Advantage Edge</h2>
+              <p>Dynamic sector databases query analysis output.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// SECTOR VECTORS</h3>
+                <div class="spec-detail-line"><strong>Direct Competitors:</strong> 4 matched (DevAgent local platforms)</div>
+                <div class="spec-detail-line"><strong>Advantage Node:</strong> Dynamic window coordination matrix</div>
+                <div class="spec-detail-line"><strong>Pricing Strategy:</strong> Token-metered API scaling</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// MATRIX SCORES</h3>
+                <div class="spec-detail-line"><strong>Feature Advantage:</strong> 9.2 / 10</div>
+                <div class="spec-detail-line"><strong>Speed Index:</strong> 8.8 / 10</div>
+                <div class="spec-detail-line"><strong>Market Fit Index:</strong> 9.1 / 10</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. MVP Strategy (Discovery Module) -->
+      <div class="card pos-hidden" id="card-mvp-strategy">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 03</span>
+              <h3>MVP Strategy</h3>
+            </div>
+            <span class="tbl-badge amber" style="font-size: 0.55rem; padding: 2px 5px;">ACTIVE</span>
+          </div>
+          <div class="preview-body">
+            <div class="mini-progress-bar"><div class="progress-fill" style="width: 75%;"></div></div>
+            <div class="mini-progress-label">Step 3 of 4: Spec Outline</div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Step 3: MVP Strategy Planning</h2>
+              <p>Product specifications, launch timeline, and building tasks list.</p>
+            </div>
+          </div>
+          <div class="main-body steps-container">
+            <div class="steps-grid">
+              <div class="step-card completed">
+                <div class="step-icon-status">
+                  <span class="step-num">1</span>
+                  <span class="step-status">Complete</span>
+                </div>
+                <h3>Context Analyzer</h3>
+                <p>Ingests baseline vision descriptors.</p>
+              </div>
+              <div class="step-card completed">
+                <div class="step-icon-status">
+                  <span class="step-num">2</span>
+                  <span class="step-status">Complete</span>
+                </div>
+                <h3>Competitive Edge</h3>
+                <p>Maps feature set price tiers.</p>
+              </div>
+              <div class="step-card active">
+                <div class="step-icon-status">
+                  <span class="step-num">3</span>
+                  <span class="step-status">Active</span>
+                </div>
+                <h3>MVP Spec Setup</h3>
+                <p>Building coordinates swap script and CSS styling.</p>
+              </div>
+              <div class="step-card disabled">
+                <div class="step-icon-status">
+                  <span class="step-num">4</span>
+                  <span class="step-status">Queued</span>
+                </div>
+                <h3>Sync Build</h3>
+                <p>Generate final server build files.</p>
+              </div>
+            </div>
+            <div class="steps-action-bar">
+              <div class="input-inline">
+                <input type="text" placeholder="session token text" value="session_token_58832a8..." disabled>
+                <button class="action-btn">Initialize Sync Build</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Sync Build (Discovery Module) -->
+      <div class="card pos-hidden" id="card-sync-build">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-amber">STEP 04</span>
+              <h3>Sync Build</h3>
+            </div>
+            <span class="tbl-badge gray" style="font-size: 0.55rem; padding: 2px 5px;">QUEUED</span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Target bundle configurations ready.</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <div class="endpoint-line">
+                <span class="method-badge post-badge">POST</span>
+                <span class="endpoint-url">/api/discovery/build</span>
+              </div>
+              <h2>Sync Build Matrix Compilation</h2>
+            </div>
+            <button class="action-btn">Compile Target</button>
+          </div>
+          <div class="main-body terminal-container">
+            <div class="terminal-header">
+              <span class="term-dot red"></span>
+              <span class="term-dot yellow"></span>
+              <span class="term-dot green"></span>
+              <span class="term-title">build_compiler.log</span>
+            </div>
+            <pre class="terminal-body"><code>// Target Node initialized. Waiting for trigger...
+[LOG_ENTRY] Compiler check: 0 errors, 0 warnings.
+[READY] Bundle size estimates:
+ - bundle.main.js: 142KB
+ - bundle.styles.css: 22KB
+ - assets/fonts/jetbrains-mono: Loaded.</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SECURITY MODULE CARDS ==================== -->
+
+      <!-- 10. Access Controls (Security Module) -->
+      <div class="card pos-hidden" id="card-access-control">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // LOCK</span>
+              <h3>Access Control</h3>
+            </div>
+            <div class="preview-metric-text text-green">SECURE</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">2 active agent tunnels</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Gateway Access Monitors</h2>
+              <p>Auditing neural agent connections and channel encryption bounds.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// ENCRYPTION SUMMARY</h3>
+                <div class="spec-detail-line"><strong>Cypher:</strong> AES-GCM-256</div>
+                <div class="spec-detail-line"><strong>Rotation Period:</strong> 12 Hours (Auto)</div>
+                <div class="spec-detail-line"><strong>Route:</strong> TLS 1.3 Tunnel Socket</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// ACTIVE CONNECTIONS</h3>
+                <div class="spec-detail-line"><strong>Context-Node-A:</strong> Connected (127.0.0.1)</div>
+                <div class="spec-detail-line"><strong>Strategy-Node-C:</strong> Connected (127.0.0.1)</div>
+                <div class="spec-detail-line"><strong>Arch-Node-Alpha:</strong> Pending registration token</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. Token Registry (Security Module) -->
+      <div class="card pos-hidden" id="card-token-registry">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // REG</span>
+              <h3>Token Registry</h3>
+            </div>
+            <div class="preview-metric-text" id="miniTokenText">2 Keys</div>
+          </div>
+          <div class="preview-body">
+            <div class="mini-code"><code>token_master_2026...</code></div>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Security Token Registry Form</h2>
+              <p>Register new authentication endpoints into the neural gateway.</p>
+            </div>
+          </div>
+          <div class="main-body security-container" style="overflow: hidden;">
+            <div class="sec-form-card" style="border: none; padding: 0;">
+              <div class="sec-form">
+                <label for="secRole">Agent Access Role</label>
+                <select id="secRole">
+                  <option value="master">MASTER_ACCESS</option>
+                  <option value="readonly">READ_ONLY_VISOR</option>
+                  <option value="developer">DEVELOPER_NODE</option>
+                </select>
+                <label for="secKey">Seed Phrase Prefix</label>
+                <input type="text" id="secKey" value="onecrew_seed_cluster_" placeholder="seed string...">
+                <button class="action-btn" id="btnGenKey">Generate Key Registry</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. Session Monitor (Security Module) -->
+      <div class="card pos-hidden" id="card-session-monitor">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // AUDIT</span>
+              <h3>Session Monitor</h3>
+            </div>
+            <span class="pulse-dot"></span>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">Uptime: 100% stable</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Session Audit Log</h2>
+              <p>Active registry logs in current console session.</p>
+            </div>
+          </div>
+          <div class="main-body security-container">
+            <div class="sec-list-card" style="border: none; padding: 0;">
+              <ul class="token-list" id="tokenList">
+                <li class="token-item">
+                  <div class="tok-info">
+                    <span class="tok-name">token_master_2026_q2</span>
+                    <span class="tok-role">MASTER_ACCESS</span>
+                  </div>
+                  <span class="tok-status active">ACTIVE</span>
+                </li>
+                <li class="token-item">
+                  <div class="tok-info">
+                    <span class="tok-name">token_visor_anonymous</span>
+                    <span class="tok-role">READ_ONLY_VISOR</span>
+                  </div>
+                  <span class="tok-status active">ACTIVE</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13. Encryption Keys (Security Module) -->
+      <div class="card pos-hidden" id="card-encryption-keys">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // KEY</span>
+              <h3>Encryption Keys</h3>
+            </div>
+            <div class="preview-metric-text">AES-GCM</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">256-bit entropy verified</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>Cryptographic Keys Configuration</h2>
+              <p>Settings for entropy pools, private key storage, and access cyphers.</p>
+            </div>
+          </div>
+          <div class="main-body specs-container">
+            <div class="specs-grid">
+              <div class="spec-section-card">
+                <h3>// ENTROPY STATUS</h3>
+                <div class="spec-detail-line"><strong>Entropy Rating:</strong> 99.8% (Cryptographically Secure)</div>
+                <div class="spec-detail-line"><strong>Pool Provider:</strong> hardware_rand_oscillators</div>
+                <div class="spec-detail-line"><strong>Key Formats:</strong> PKCS#8 encoded PEM lines</div>
+              </div>
+              <div class="spec-section-card">
+                <h3>// CRYPTO CAPABILITIES</h3>
+                <div class="spec-detail-line"><strong>Supported Cyphers:</strong> AES-256-GCM, Chacha20-Poly1305</div>
+                <div class="spec-detail-line"><strong>Public Curve:</strong> Ed25519 signatures validation</div>
+                <div class="spec-detail-line"><strong>Hardware Decrypt:</strong> Enabled (Secure Enclave V2)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14. API Credentials (Security Module) -->
+      <div class="card pos-hidden" id="card-api-credentials">
+        <!-- Preview State -->
+        <div class="card-preview">
+          <div class="preview-header">
+            <div class="preview-title-group">
+              <span class="preview-tag tag-red">SHIELD // CRED</span>
+              <h3>API Credentials</h3>
+            </div>
+            <div class="preview-metric-text">9 Active</div>
+          </div>
+          <div class="preview-body">
+            <p class="preview-log-text">98.8% quota remaining</p>
+          </div>
+        </div>
+
+        <!-- Main State -->
+        <div class="card-main">
+          <div class="main-header">
+            <div class="main-title-group">
+              <h2>API Key Scopes & Quota Monitoring</h2>
+              <p>Review rate-limit scopes, active quotas, and service credentials.</p>
+            </div>
+          </div>
+          <div class="main-body business-container">
+            <div class="biz-table-wrapper" style="border: none; padding: 0;">
+              <table class="biz-table">
+                <thead>
+                  <tr>
+                    <th>Service Endpoint</th>
+                    <th>Key Scope</th>
+                    <th>Monthly Quota</th>
+                    <th>Usage Rate</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>/api/discovery/*</td>
+                    <td>WRITE_WORKSPACE</td>
+                    <td>100,000 requests</td>
+                    <td>1.2% (1,200)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                  <tr>
+                    <td>/api/dashboard/workspace/*</td>
+                    <td>READ_PAYLOADS</td>
+                    <td>500,000 requests</td>
+                    <td>4.8% (24,000)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                  <tr>
+                    <td>/api/security/tokens/*</td>
+                    <td>MASTER_KEYGEN</td>
+                    <td>10,000 requests</td>
+                    <td>0.2% (20)</td>
+                    <td><span class="tbl-badge green">NOMINAL</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== WORKSPACE MODULE CARDS ==================== -->
+      <div class="card pos-hidden" id="card-workspace-panel" style="grid-column: 1 / -1; background: transparent; border: none; box-shadow: none;">
+        <div class="card-main" style="display: block; background: transparent; border: none;">
+          <div class="main-header" style="margin-bottom: 2rem;">
+            <div class="main-title-group">
+              <h2>Workspace Core Modules</h2>
+              <p>Select a structural foundation layer to configure system parameters.</p>
+            </div>
+          </div>
+          
+          <div class="workspace-grid">
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 01</span>
+              <span>Foundation</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 02</span>
+              <span>Business</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 03</span>
+              <span>Product</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 04</span>
+              <span>Marketing</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 05</span>
+              <span>Brand</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 06</span>
+              <span>Sales</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 07</span>
+              <span>Execution</span>
+            </button>
+            <button class="workspace-btn">
+              <span class="btn-prefix">// LAYER 08</span>
+              <span>Resources</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Module Nav Bar Selector -->
+    <footer class="dashboard-footer">
+      <div class="module-nav">
+        <button class="nav-tab active" data-module="dashboard">
+          <span class="nav-icon">📊</span>
+          DASHBOARD_CORE
+        </button>
+        <button class="nav-tab" data-module="discovery">
+          <span class="nav-icon">💡</span>
+          DISCOVERY_STEPS
+        </button>
+        <button class="nav-tab" data-module="security">
+          <span class="nav-icon">🛡️</span>
+          SECURITY_SHIELD
+        </button>
+        <button class="nav-tab" data-module="workspace-panel">
+          <span class="nav-icon">📁</span>
+          WORKSPACE_CORE
+        </button>
+      </div>
+    </footer>
+  </div>
+  
+  <script src="app.js?v=8"></script>
+</body>
+</html>

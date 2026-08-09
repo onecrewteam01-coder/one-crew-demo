@@ -1,0 +1,1188 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600&family=Caveat:wght@400;600;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background, #050505);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sora: "Sora", sans-serif;
+  --font-caveat: "Caveat", cursive;
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary, #adc6ff);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary, #ffffff);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-on-tertiary: #303030;
+  --color-on-surface-variant: #c4c7c8;
+  --color-on-tertiary-fixed: #1b1c1c;
+  --color-primary-fixed-dim: #c6c6c7;
+  --color-inverse-primary: #5d5f5f;
+  --color-on-secondary: #002e69;
+  --color-surface-dim: #131313;
+  --color-surface-container-highest: #353534;
+  --color-on-secondary-container: #00285c;
+  --color-surface: #131313;
+  --color-error-container: #93000a;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-primary-fixed: #e2e2e2;
+  --color-secondary-fixed: #d8e2ff;
+  --color-surface-tint: #c6c6c7;
+  --color-on-primary-container: #636565;
+  --color-inverse-on-surface: #313030;
+  --color-on-primary-fixed: #1a1c1c;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-variant: #353534;
+  --color-outline: #8e9192;
+  --color-outline-variant: #444748;
+  --color-inverse-surface: #e5e2e1;
+  --color-primary-container: #e2e2e2;
+  --color-secondary-fixed-dim: #adc6ff;
+  --color-surface-bright: #3a3939;
+  --color-tertiary-fixed-dim: #c8c6c6;
+  --color-on-background: #e5e2e1;
+  --color-on-secondary-fixed-variant: #004493;
+  --color-secondary-container: #4b8eff;
+  --color-tertiary-fixed: #e4e2e2;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-surface-container-high: #2a2a2a;
+  --color-on-tertiary-container: #646464;
+  --color-error: #ffb4ab;
+  --color-on-secondary-fixed: #001a41;
+  --color-on-error: #690005;
+  --color-on-primary-fixed-variant: #454747;
+  --color-on-primary: #2f3131;
+  --color-surface-container: #201f1f;
+  --color-tertiary: #ffffff;
+  --color-on-error-container: #ffdad6;
+  --color-on-surface: #e5e2e1;
+  --color-tertiary-container: #e4e2e2;
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-color: #050505;
+    color: #e5e2e1;
+    overflow-x: hidden;
+    font-family: var(--font-sans);
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.glass-panel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+  transform: translateY(-4px);
+}
+
+.light-trail {
+  position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  height: 1px;
+  width: 200px;
+  animation: moveTrail 8s linear infinite;
+}
+
+@keyframes moveTrail {
+  0% { transform: translateX(-100%) translateY(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100vw) translateY(200px); opacity: 0; }
+}
+
+.orbit-ring {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  animation: rotate 60s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pulse-active {
+  animation: pulse-active 4s ease-in-out infinite;
+}
+
+@keyframes pulse-active {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.glow-text {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Smooth scroll for cinematic scene transitions */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Floating animations for suspended hologram feel ── */
+.float-slow {
+  animation: floatBob 6s ease-in-out infinite;
+}
+.float-medium {
+  animation: floatBob 4.5s ease-in-out infinite;
+}
+.float-fast {
+  animation: floatBob 3.5s ease-in-out infinite;
+}
+.float-delay-1 {
+  animation-delay: -1.5s;
+}
+.float-delay-2 {
+  animation-delay: -3s;
+}
+.float-delay-3 {
+  animation-delay: -4.5s;
+}
+
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* ── Hologram glow effect (white glow removed) ── */
+.hologram-glow {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.hologram-glow-intense {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Energy stream animation for pipeline connections ── */
+.energy-stream {
+  stroke-dasharray: 8 12;
+  animation: energyFlow 2s linear infinite;
+}
+
+@keyframes energyFlow {
+  0% { stroke-dashoffset: 40; }
+  100% { stroke-dashoffset: 0; }
+}
+
+
+/* ── Rotating accent ring ── */
+.rotate-slow {
+  animation: rotateSlow 20s linear infinite;
+}
+.rotate-reverse {
+  animation: rotateSlow 25s linear infinite reverse;
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Scene section base ── */
+.scene-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── Pipeline module holographic styling ── */
+.pipeline-module {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.pipeline-module:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* ── Agent card glass styling ── */
+.agent-card {
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.agent-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px);
+}
+
+/* ── Ambient depth fade for observatory continuation ── */
+.observatory-depth {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(255,255,255,0.015) 0%, transparent 70%),
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.01) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.01) 0%, transparent 50%);
+}
+
+/* ── Scanline overlay for cinematic depth (grid lines removed) ── */
+.scanline-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Particle drift animation for floating ambient particles ── */
+@keyframes particleDrift {
+  0%, 100% { opacity: 0; transform: translateY(0) translateX(0); }
+  25% { opacity: 0.3; }
+  50% { opacity: 0.15; transform: translateY(-20px) translateX(10px); }
+  75% { opacity: 0.25; }
+}
+
+/* ── Diagram particle animation ── */
+@keyframes diagramParticle {
+  0%, 100% { opacity: 0; transform: translate(0, 0); }
+  30% { opacity: 0.25; }
+  50% { opacity: 0.15; transform: translate(8px, -12px); }
+  70% { opacity: 0.2; }
+}
+
+/* ── Onboarding textarea — hidden scrollbar ────────────────────────────────
+   Scoped exclusively to .onboarding-textarea so it cannot affect
+   any other scrollbar in the application.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Firefox */
+.onboarding-textarea {
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+
+/* Chromium / Safari */
+.onboarding-textarea::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Custom Blinking Caret Animation ── */
+@keyframes caretBlink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.animate-blink {
+  animation: caretBlink 1s step-end infinite;
+}
+
+/* --- Dashboard Custom Coordinates & Cards Swapping --- */
+:root {
+  --transition-card: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  --card-radius: 20px;
+  --element-radius: 8px;
+  --panel-bg: #070709;
+  --panel-bg-hover: #0d0d12;
+  --panel-border: #141416;
+}
+
+.card {
+  position: absolute;
+  border-radius: var(--card-radius);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+  transition: var(--transition-card);
+  overflow: hidden;
+}
+
+@media (min-width: 901px) {
+  /* Cockpit IDE layout border/radius resets */
+  .card, .agent-sidebar {
+    border-radius: 0 !important;
+  }
+  .card.pos-main {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-left: 1px solid var(--panel-border) !important;
+    border-right: 1px solid var(--panel-border) !important;
+  }
+  .agent-sidebar {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: none !important;
+    border-left: 1px solid var(--panel-border) !important;
+  }
+  .card:not(.pos-main) {
+    /* Keep a small border radius for compact stacked preview cards */
+    border-radius: var(--element-radius) !important;
+  }
+}
+
+.card.pos-main {
+  left: 248px; 
+  top: 0;
+  width: calc(100% - 248px);
+  height: 100%; 
+  z-index: 10;
+  cursor: default;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* When only 1 card in module — expand main card to fill full width */
+.no-side-cards .card.pos-main {
+  left: 0 !important;
+  width: 100% !important;
+}
+
+.card.pos-side-1 {
+  left: 0;
+  top: calc(12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-2 {
+  left: 0;
+  top: calc(110px + 16px + 12px - var(--side-scroll-y, 0px)); 
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-3 {
+  left: 0;
+  top: calc(((110px + 16px) * 2) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-4 {
+  left: 0;
+  top: calc(((110px + 16px) * 3) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-5 {
+  left: 0;
+  top: calc(((110px + 16px) * 4) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-6 {
+  left: 0;
+  top: calc(((110px + 16px) * 5) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-7 {
+  left: 0;
+  top: calc(((110px + 16px) * 6) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-side-8 {
+  left: 0;
+  top: calc(((110px + 16px) * 7) + 12px - var(--side-scroll-y, 0px));
+  width: calc(236px - 24px);
+  height: 110px;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.card.pos-hidden {
+  left: -260px;
+  top: 30%;
+  width: 236px;
+  height: 115px;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
+}
+
+.card:not(.pos-main):hover {
+  background: var(--panel-bg-hover);
+  border-color: #888888;
+  transform: scale(1.005);
+}
+
+.card .card-preview {
+  position: absolute;
+  inset: 0;
+  padding: 12px 16px; 
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: scale(0.98);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image: linear-gradient(rgba(7, 7, 9, 0.82), rgba(7, 7, 9, 0.82)), url('/side-card-bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.card .card-main {
+  position: absolute;
+  inset: 0;
+  padding: 16px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: scale(1.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.card.pos-main .card-main {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.card:not(.pos-main) .card-preview {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+/* ── Mobile layout (≤ 900px) ── */
+@media (max-width: 900px) {
+
+  /* ── Page shell: fixed full-height layout so header & footer never scroll away ── */
+  .mobile-page-shell {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    overflow: hidden;
+  }
+
+  /* ── Outer layout container: grow to content height on mobile ── */
+  .dashboard-layout-container {
+    display: flex;
+    flex-direction: column;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    position: relative;
+  }
+
+  /* ── Main workspace: grow to content height on mobile ── */
+  .dashboard-content.main-workspace {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow-y: visible !important;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-top: 0;
+    padding-bottom: 80px;
+    width: 100% !important;
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ── All cards: reset absolute positioning ── */
+  .card {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 12px;
+  }
+
+  /* ── Hidden cards disappear entirely ── */
+  .card.pos-hidden {
+    display: none !important;
+  }
+
+  /* ── Side cards (not main): hidden in mobile view ── */
+  .card[class*="pos-side-"],
+  .card.pos-hidden {
+    display: none !important;
+  }
+
+  /* ── Side card strip: hidden by default; shown via .mobile-card-strip wrapper ── */
+  .mobile-side-card {
+    display: none !important;
+  }
+
+  /* ── Main card: only show the card-main content, hide preview ── */
+  .card.pos-main .card-preview {
+    display: none !important;
+  }
+  .card.pos-main .card-main {
+    position: relative !important;
+    inset: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    height: auto !important;
+    min-height: 60vh;
+    padding: 16px;
+  }
+
+  /* ── Allow cards to grow naturally so layout-container can scroll ── */
+  .card-main,
+  .main-body,
+  .flex-grow.overflow-y-auto {
+    height: auto !important;
+    overflow-y: visible !important;
+    max-height: none !important;
+    flex-shrink: 0 !important;
+  }
+  .card.pos-main {
+    min-height: calc(100vh - 120px) !important;
+    height: auto !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+  }
+
+  /* ── main-header layout fix ── */
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .main-header > div {
+    width: 100%;
+  }
+
+  /* ── Graph canvas height on mobile ── */
+  #graph-canvas-viewport {
+    height: 380px !important;
+    min-height: 380px !important;
+  }
+
+  /* ── Agent Hub: overlay below header on mobile ── */
+  .agent-sidebar {
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 95 !important;
+  }
+  .agent-sidebar.open {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .agent-sidebar:not(.open) {
+    transform: translateX(100%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* ── Mobile details panel scrolling fix ── */
+  .graph-right-panel,
+  .graph-right-panel > div {
+    height: auto !important;
+    min-height: 0 !important;
+    flex-grow: 0 !important;
+    overflow-y: visible !important;
+  }
+}
+
+/* Hide scrollbars for clean layouts */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide all scrollbars globally across dashboard — cards, sidebar, main body */
+.agent-sidebar *::-webkit-scrollbar,
+.card-main *::-webkit-scrollbar,
+.main-body *::-webkit-scrollbar {
+  display: none;
+}
+.agent-sidebar *,
+.card-main *,
+.main-body * {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Tactical theme typography matching backend: unify all dashboard text to monospace */
+.dashboard-content,
+.dashboard-content * {
+  font-family: var(--font-mono) !important;
+}
+
+/* Heading transformations */
+.main-title-group h2,
+.preview-title-group h3 {
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+}
+
+.main-title-group h2 {
+  font-size: 1.1rem !important;
+}
+
+.preview-title-group h3 {
+  font-size: 0.8rem !important;
+}
+
+/* Style preview log text to be muted grey and compact */
+.preview-log-text {
+  color: #888888 !important;
+  font-size: 0.72rem !important;
+}
+
+/* Style main card sub headings (h3) to have a reduced, uniform size */
+.card-main h3 {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 8px !important;
+}
+
+/* Style main card sub-titles/descriptions to be compact and grey */
+.main-title-group p {
+  font-size: 0.75rem !important;
+  color: #888888 !important;
+  margin-top: 4px !important;
+}
+
+/* Style card main headers to ensure clear visual separation and spacing */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--panel-border) !important;
+  padding-bottom: 10px !important;
+  margin-bottom: 8px !important;
+}
+
+/* Startup Execution OS Animations & Glows */
+@keyframes timelinePulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2), inset 0 0 3px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), inset 0 0 6px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.timeline-active-node {
+  animation: timelinePulse 2s ease-in-out infinite;
+}
+
+.checkmark-pop {
+  animation: checkmarkScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes checkmarkScale {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 15px rgba(255, 255, 255, 0.01);
+}
+
+/* Unstable vibrating animation for graph nodes */
+@keyframes graphNodeUnstableAnim {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-1.5px, 0.8px); }
+  40% { transform: translate(1px, -1.2px); }
+  60% { transform: translate(-0.8px, 1.5px); }
+  80% { transform: translate(1.2px, -0.5px); }
+}
+
+.graph-node-unstable {
+  animation: graphNodeUnstableAnim 0.8s ease-in-out infinite;
+}
+
+/* Flicker effect for connection paths */
+@keyframes graphLinkFlicker {
+  0%, 100% { opacity: 0.08; }
+  15% { opacity: 0.6; }
+  30% { opacity: 0.15; }
+  45% { opacity: 0.75; }
+  60% { opacity: 0.2; }
+  75% { opacity: 0.7; }
+  90% { opacity: 0.1; }
+}
+
+.graph-link-unstable {
+  animation: graphLinkFlicker 5s infinite;
+}
+
+
+.dashboard-layout-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  gap: 0;
+}
+
+@media (min-width: 901px) {
+  .dashboard-layout-container {
+    height: calc(100% - 64px) !important;
+  }
+}
+
+.dashboard-content.main-workspace {
+  height: 100%;
+  position: relative;
+  transition: flex-basis 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-grow: 1;
+}
+
+.agent-sidebar {
+  height: 100%;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--card-radius);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              flex-basis 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.35s ease,
+              border-color 0.35s ease,
+              margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 95;
+}
+
+.agent-chat-container {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+}
+
+.chat-messages-log {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Desktop Breakpoint */
+@media (min-width: 1025px) {
+  .dashboard-content.main-workspace.sidebar-open {
+    flex-basis: 76%;
+    max-width: 76%;
+    width: 76%;
+  }
+  .dashboard-content.main-workspace:not(.sidebar-open) {
+    flex-basis: 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+  .agent-sidebar.open {
+    width: 24%;
+    flex-basis: 24%;
+    max-width: 24%;
+    margin-left: 0;
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .agent-sidebar:not(.open) {
+    width: 0;
+    flex-basis: 0;
+    max-width: 0;
+    transform: translateX(30px);
+    opacity: 0;
+    pointer-events: none;
+    border-left: none !important;
+    border-color: transparent !important;
+    margin-left: 0;
+  }
+
+  /* Sidebar CLOSED — side cards 21%, main card fills rest (docked, touching) */
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-1,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-2,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-3,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-4,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-5,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-6,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-7,
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-side-8 {
+    left: 0 !important;
+    width: calc(21% - 24px) !important;
+  }
+  .dashboard-content.main-workspace:not(.sidebar-open) .card.pos-main {
+    left: 21% !important;
+    width: 79% !important;
+  }
+
+  /* Sidebar OPEN — tighten side cards to 236px fixed, main card fills rest (docked, touching) */
+  .dashboard-content.main-workspace.sidebar-open .card.pos-main {
+    left: 236px !important;
+    width: calc(100% - 236px) !important;
+  }
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-1,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-2,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-3,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-4,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-5,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-6,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-7,
+  .dashboard-content.main-workspace.sidebar-open .card.pos-side-8 {
+    left: 0 !important;
+    width: calc(236px - 24px) !important;
+  }
+}
+
+/* Tablet Breakpoint (Overlay) */
+@media (max-width: 1024px) and (min-width: 601px) {
+  .dashboard-content.main-workspace {
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .agent-sidebar {
+    position: fixed !important;
+    right: 20px !important;
+    top: 80px !important;
+    bottom: 20px !important;
+    height: calc(100vh - 100px) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+  }
+  .agent-sidebar.open {
+    width: 380px !important;
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+  }
+  .agent-sidebar:not(.open) {
+    width: 380px !important;
+    transform: translateX(calc(100% + 30px)) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    border-left: none !important;
+    border-color: transparent !important;
+  }
+}
+
+/* Mobile Breakpoint (Drawer) */
+@media (max-width: 600px) {
+  .dashboard-content.main-workspace {
+    flex-basis: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .agent-sidebar {
+    position: fixed !important;
+    right: 0 !important;
+    top: 48px !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: calc(100dvh - 48px) !important;
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    z-index: 150 !important;
+  }
+  .agent-sidebar.open {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+  }
+  .agent-sidebar:not(.open) {
+    transform: translateX(100%) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Hide Parsing Status column in doc tracker when Agent Hub sidebar is open */
+.dashboard-content.main-workspace.sidebar-open .col-parsing-status {
+  display: none;
+}
+
+/* Graph Canvas Custom Fullscreen & Floating Toolbar */
+.card.graph-fullscreen-active {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: #050507 !important;
+}
+
+.card.graph-fullscreen-active .card-main {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.card.graph-fullscreen-active .main-header {
+  margin-bottom: 12px !important;
+}
+
+.card.graph-fullscreen-active .main-body {
+  height: calc(100% - 60px) !important;
+  max-height: calc(100% - 60px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+}
+
+.card.graph-fullscreen-active .main-body > div {
+  height: 100% !important;
+  max-height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-grow: 1 !important;
+}
+
+.card.graph-fullscreen-active #graph-canvas-viewport {
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  flex-grow: 1 !important;
+}
+
+.graph-fullscreen-mode {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  background: #050507 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.graph-toolbar {
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.graph-toolbar button {
+  position: relative;
+  outline: none;
+}
+
+.graph-toolbar button:active {
+  transform: scale(0.95);
+}
+/* Hide mobile legend card on desktop by default */
+.mobile-legend-card {
+  display: none !important;
+}
+
+/* Stack toolbar above legend bar in fullscreen mobile view (<= 900px) */
+@media (max-width: 900px) {
+  .card.graph-fullscreen-active .graph-toolbar {
+    bottom: 74px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: max-content !important;
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .card.graph-fullscreen-active .graph-legend {
+    bottom: 16px !important;
+    left: 16px !important;
+    right: 16px !important;
+    justify-content: center !important;
+  }
+
+  /* Hide floating legend inside viewport on mobile when not in fullscreen mode */
+  .card:not(.graph-fullscreen-active) .graph-legend {
+    display: none !important;
+  }
+
+  /* Show mobile legend card on mobile viewport */
+  .mobile-legend-card {
+    display: flex !important;
+  }
+}
+
+/* ── Core Fallback System: shared skeleton shimmer ── */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+  animation: skeletonShimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  100% { transform: translateX(100%); }
+}
+
+
+

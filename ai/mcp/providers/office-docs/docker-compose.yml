@@ -1,0 +1,27 @@
+# Document Generation MCP provider: ForLegalAI/mcp-ms-office-documents
+#
+# PINNED to v3.20 (runtime-verified by us on 2026-07-09) — do not float to
+# :latest; review upstream changelog before bumping (repo security policy).
+#
+# Start:   docker compose up -d        (from this directory)
+# Verify:  curl http://localhost:8958/healthz   -> ok
+#          npx ts-node ai/mcp/verify-office-docs.ts   (from repo root)
+services:
+  mcp-office-docs:
+    image: georgx22/mcp-office-docs:v3.20
+    container_name: mcp-office-docs
+    restart: unless-stopped
+    ports:
+      - "8958:8958"
+    # Optional overrides (API_KEY, UPLOAD_STRATEGY, admin UI, cloud storage).
+    # Defaults need NO .env at all: LOCAL output, no auth.
+    env_file:
+      - path: ./.env
+        required: false
+    volumes:
+      # LOCAL strategy writes generated files here
+      - ./output:/app/output
+      # Optional: Word/PPTX/email templates that become typed MCP tools
+      - ./custom_templates:/app/custom_templates
+      # Optional: dynamic tool definitions (email_templates.yaml, docx_templates.yaml)
+      - ./config:/app/config
