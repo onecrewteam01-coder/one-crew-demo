@@ -47,7 +47,7 @@ const supabaseAdmin = createClient(
 );
 
 // 2. GLOBAL MIDDLEWARE SETUP (Now applied in the correct sequence)
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000' }));
 app.use(pinoHttp());
 app.use(express.json());
 
@@ -161,7 +161,7 @@ app.get('/api/auth/google', async (req, res) => {
         provider: 'google',
         options: {
             // Where Supabase will redirect the browser back to after Google finishes authenticating
-            redirectTo: 'http://localhost:5000/api/auth/callback', 
+            redirectTo: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/auth/callback`, 
         },
     });
 
@@ -174,7 +174,7 @@ app.get('/api/auth/google', async (req, res) => {
 // 4. OAUTH HANDSHAKE CALLBACK GATEWAY
 app.get('/api/auth/callback', async (req, res) => {
     // Once verified by Google, redirect to the AI Discovery dashboard
-    return res.redirect('http://localhost:3000/dashboard');
+    return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard`);
 });
 
 

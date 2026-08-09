@@ -64,7 +64,7 @@ export default function RegisterForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleConnecting, setIsGoogleConnecting] = useState(false);
 
-   const [form, setForm] = useState({
+  const [form, setForm] = useState({
     fullName: "",
     email: "",
     password: "",
@@ -301,7 +301,7 @@ export default function RegisterForm() {
             </motion.button>
           </div>
 
-           {/* Login */}
+          {/* Login */}
           <div className="relative z-10 text-center text-xs text-white/50 border-t border-white/5 pt-4 mt-1 font-mono">
             <p>
               Already have an account?{" "}

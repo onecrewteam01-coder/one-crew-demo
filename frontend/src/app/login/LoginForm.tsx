@@ -63,11 +63,11 @@ export default function LoginForm() {
 
 
 
-// 1. Update the Email/Password submission function
+  // 1. Update the Email/Password submission function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: "POST",
@@ -93,10 +93,10 @@ export default function LoginForm() {
   // 2. Update the Google Auth click function
   const handleGoogleClick = async () => {
     setIsGoogleConnecting(true);
-    
+
     try {
       // Point this directly to the Express Google Auth initiation endpoint you tested earlier
-      window.location.href = "http://localhost:5000/api/auth/google"; 
+      window.location.href = "http://localhost:5000/api/auth/google";
     } catch (err) {
       console.error("Google Auth initiation failed:", err);
       setIsGoogleConnecting(false);
@@ -127,7 +127,7 @@ export default function LoginForm() {
 
       {/* Main Glass Panel */}
       <div className="relative glass-panel rounded-2xl border border-white/10 bg-[#0e0e0e]/45 backdrop-blur-2xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col gap-5 transition-all duration-500 hover:border-white/20">
-        
+
         {/* Particle Overlay */}
         <AmbientParticles />
 
@@ -200,8 +200,8 @@ export default function LoginForm() {
               />
               <span>Remember me</span>
             </label>
-            <Link 
-              href="#" 
+            <Link
+              href="#"
               className="text-white/50 hover:text-white transition-colors hover:underline"
             >
               Forgot password?
@@ -274,7 +274,7 @@ export default function LoginForm() {
         {/* Footer Navigation */}
         <div className="relative z-10 text-center text-xs text-white/50 border-t border-white/5 pt-4 mt-1 font-mono">
           Don&apos;t have an account?{" "}
-          <Link 
+          <Link
             href="/Register"
             className="text-white hover:text-white hover:underline font-medium transition-colors font-sans"
           >
