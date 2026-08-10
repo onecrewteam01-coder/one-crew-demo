@@ -83,7 +83,7 @@ export default function RegisterForm() {
   const handleGoogleClick = async () => {
     setIsGoogleConnecting(true);
     try {
-      window.location.href = "http://localhost:5000/api/auth/google";
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/auth/google`;
     } catch (err) {
       console.error("Google Auth initiation failed:", err);
       setIsGoogleConnecting(false);

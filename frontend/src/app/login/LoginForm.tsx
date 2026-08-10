@@ -96,7 +96,7 @@ export default function LoginForm() {
 
     try {
       // Point this directly to the Express Google Auth initiation endpoint you tested earlier
-      window.location.href = "http://localhost:5000/api/auth/google";
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/auth/google`;
     } catch (err) {
       console.error("Google Auth initiation failed:", err);
       setIsGoogleConnecting(false);
