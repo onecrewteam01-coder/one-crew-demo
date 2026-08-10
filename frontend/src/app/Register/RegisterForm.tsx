@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { API_URL } from "@/lib/config";
+import { API_URL } from "../../lib/config";
 
 
 /* Floating ambient particles inside the login panel context */
