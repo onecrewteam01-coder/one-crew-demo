@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { API_URL } from "../../lib/config";
+const API_URL = "https://one-crew-demo.onrender.com";
 
 
 /* Floating ambient particles inside the login panel context */
