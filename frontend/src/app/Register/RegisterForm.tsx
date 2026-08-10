@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import { API_URL } from "@/lib/config";
+
 
 /* Floating ambient particles inside the login panel context */
 function AmbientParticles() {
@@ -83,7 +85,7 @@ export default function RegisterForm() {
   const handleGoogleClick = async () => {
     setIsGoogleConnecting(true);
     try {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/auth/google`;
+      window.location.href = `${API_URL}/api/auth/google`;
     } catch (err) {
       console.error("Google Auth initiation failed:", err);
       setIsGoogleConnecting(false);
@@ -123,7 +125,7 @@ export default function RegisterForm() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+      const response = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
