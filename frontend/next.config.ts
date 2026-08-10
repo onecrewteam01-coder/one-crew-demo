@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // Fix Turbopack's workspace root detection in a monorepo
+    root: __dirname,
+  },
   env: {
     // If building on Vercel, use the deployed Render URL, otherwise fallback to local/custom env
     NEXT_PUBLIC_API_URL: process.env.VERCEL
@@ -9,4 +13,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default nextConfig;
