@@ -49,7 +49,12 @@ const supabaseAdmin = createClient(
 // 2. GLOBAL MIDDLEWARE SETUP (Now applied in the correct sequence)
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://one-crew-demo.vercel.app';
 const BACKEND_URL = process.env.BACKEND_URL || 'https://one-crew-demo.onrender.com';
-app.use(cors({ origin: FRONTEND_URL }));app.use(pinoHttp());
+app.use(cors({ origin: [
+    "http://localhost:3000",
+    "https://one-crew-demo.vercel.app"
+  ],
+  credentials: true}));
+app.use(pinoHttp());
 app.use(express.json());
 
 // SERVE FRONTEND DUMMY PAGES AND NEW DASHBOARD
